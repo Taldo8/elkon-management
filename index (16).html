@@ -1,0 +1,1473 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="he">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>אלקון – מערכת ניהול</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.11.0/dist/tabler-icons.min.css"/>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --f:'Figtree',sans-serif;
+  --bg:#f0f2f7;--white:#fff;--border:#dde1ec;--borderl:#eaecf4;
+  --text:#1f2128;--ts:#5c607a;--tx:#a8abbe;
+  --sb:#141729;--sb2:#1d2140;
+  --blue:#0073ea;--blued:#0060c0;--bluebg:#e8f2ff;
+  --green:#00c16e;--greenbg:#d8f5eb;--greend:#005c34;
+  --org:#f0921e;--orgbg:#fff0db;--orgd:#7a4400;
+  --red:#e03355;--redbg:#ffe4ec;--redd:#7a0022;
+  --pur:#5c5fd6;--purbg:#ededfc;
+  --yel:#e6b800;--yelbg:#fff9db;
+}
+
+/* ─── LOGIN ─── */
+.login-screen{position:fixed;inset:0;background:linear-gradient(135deg,#0f1630 0%,#1a2a5e 100%);display:flex;align-items:center;justify-content:center;z-index:999;font-family:var(--f)}
+.login-box{background:var(--white);border-radius:16px;padding:40px 36px;width:380px;box-shadow:0 24px 80px rgba(0,0,0,0.4)}
+.login-logo{display:flex;align-items:center;gap:12px;justify-content:center;margin-bottom:28px}
+.login-mark{width:42px;height:42px;background:var(--blue);border-radius:11px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:20px;font-weight:700}
+.login-title{font-size:20px;font-weight:700;color:var(--text)}
+.login-subtitle{font-size:12px;color:var(--ts);text-align:center;margin-bottom:28px}
+.login-fld{margin-bottom:14px}
+.login-lbl{font-size:12px;font-weight:600;color:var(--ts);margin-bottom:6px}
+.login-input{width:100%;border:1.5px solid var(--border);border-radius:8px;padding:10px 13px;font-size:13.5px;font-family:var(--f);color:var(--text);outline:none;transition:border-color .15s}
+.login-input:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(0,115,234,0.1)}
+.login-btn{width:100%;height:42px;background:var(--blue);color:#fff;border:none;border-radius:8px;font-size:14px;font-family:var(--f);font-weight:600;cursor:pointer;transition:background .15s;margin-top:8px}
+.login-btn:hover{background:var(--blued)}
+.login-err{background:var(--redbg);color:var(--redd);border-radius:7px;padding:8px 12px;font-size:12px;margin-top:10px;display:none;text-align:center}
+.login-users{margin-top:20px;padding-top:16px;border-top:1px solid var(--borderl)}
+.login-users-title{font-size:11px;color:var(--tx);text-align:center;margin-bottom:10px;font-weight:500}
+.login-user-chip{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:8px;cursor:pointer;transition:background .12s;margin-bottom:4px}
+.login-user-chip:hover{background:var(--bg)}
+.luc-av{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;flex-shrink:0}
+.luc-name{font-size:12.5px;color:var(--text);font-weight:500}
+.luc-role{font-size:10.5px;color:var(--ts)}
+
+/* ─── APP ─── */
+.app{display:flex;height:100vh;overflow:hidden;font-family:var(--f)}
+
+/* ─── SIDEBAR ─── */
+.sb{width:218px;background:var(--sb);display:flex;flex-direction:column;flex-shrink:0}
+.sb-logo{padding:16px 16px 10px;border-bottom:1px solid rgba(255,255,255,0.06);display:flex;align-items:center;gap:10px}
+.sb-mark{width:30px;height:30px;background:var(--blue);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;font-weight:700;flex-shrink:0}
+.sb-name{color:#fff;font-size:14px;font-weight:600}
+.sb-sub{color:rgba(255,255,255,0.28);font-size:10px;margin-top:1px}
+.sb-conn{display:flex;align-items:center;gap:5px;padding:4px 16px 8px;font-size:10px;color:var(--green)}
+.sb-conn-dot{width:6px;height:6px;border-radius:50%;background:var(--green)}
+.sb-apps{padding:8px 10px 6px;border-bottom:1px solid rgba(255,255,255,0.06)}
+.sb-sec-lbl{font-size:9.5px;color:rgba(255,255,255,0.25);text-transform:uppercase;letter-spacing:.8px;font-weight:600;padding:0 6px 5px}
+.app-btn{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:7px;cursor:pointer;color:rgba(255,255,255,0.55);font-size:12.5px;font-weight:500;transition:all .15s;margin-bottom:2px}
+.app-btn:hover{background:rgba(255,255,255,0.07);color:rgba(255,255,255,0.85)}
+.app-btn.active{color:#fff}
+.app-icon{width:26px;height:26px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.sb-nav{flex:1;overflow-y:auto;padding:8px 0}
+.sb-lbl{padding:4px 14px 3px;font-size:9.5px;color:rgba(255,255,255,0.25);text-transform:uppercase;letter-spacing:.8px;font-weight:600;margin-top:6px}
+.si{display:flex;align-items:center;gap:8px;padding:7px 14px;cursor:pointer;color:rgba(255,255,255,0.55);font-size:12.5px;transition:background .12s;border-radius:0}
+.si:hover{background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.85)}
+.si.active{background:rgba(92,95,214,0.28);color:#fff;border-right:2px solid var(--pur)}
+.si i{font-size:15px;width:17px;flex-shrink:0}
+.si-badge{margin-right:auto;background:var(--red);color:#fff;font-size:9px;border-radius:9px;padding:1px 6px}
+.si-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+.sb-user{padding:10px 14px 12px;border-top:1px solid rgba(255,255,255,0.06);display:flex;align-items:center;gap:9px;flex-shrink:0}
+.sb-uav{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;flex-shrink:0}
+.sb-logout{margin-right:auto;cursor:pointer;color:rgba(255,255,255,0.3);font-size:16px;transition:color .12s}
+.sb-logout:hover{color:rgba(255,255,255,0.7)}
+
+/* ─── MAIN ─── */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0;background:var(--bg)}
+.topnav{background:var(--white);border-bottom:1.5px solid var(--border);height:50px;display:flex;align-items:center;padding:0 18px;gap:0;flex-shrink:0;box-shadow:0 1px 4px rgba(0,0,0,0.04)}
+.tn-title{font-size:14.5px;font-weight:700;color:var(--text);margin:0 12px}
+.tn-tabs{display:flex;height:100%}
+.tn-tab{display:flex;align-items:center;padding:0 14px;font-size:12.5px;color:var(--ts);cursor:pointer;border-bottom:2.5px solid transparent;transition:all .15s;white-space:nowrap;font-weight:500}
+.tn-tab.active{color:var(--blue);border-bottom-color:var(--blue);font-weight:600}
+.tn-right{margin-right:0;margin-left:auto;display:flex;align-items:center;gap:7px}
+.tn-icon{width:32px;height:32px;border-radius:7px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--ts);font-size:18px;position:relative;transition:background .12s}
+.tn-icon:hover{background:var(--bg)}
+.npip{width:8px;height:8px;background:var(--red);border-radius:50%;position:absolute;top:5px;left:5px;border:2px solid var(--white);display:none}
+.btn{display:inline-flex;align-items:center;gap:5px;padding:0 14px;height:34px;border-radius:7px;font-size:12.5px;font-family:var(--f);cursor:pointer;border:none;font-weight:600;transition:all .12s;white-space:nowrap}
+.btn-p{background:var(--blue);color:#fff}.btn-p:hover{background:var(--blued)}
+.btn-s{background:var(--white);color:var(--text);border:1.5px solid var(--border)}.btn-s:hover{background:var(--bg)}
+.btn-g{background:var(--green);color:#fff}
+.btn-r{background:var(--redbg);color:var(--redd);border:1px solid #ffb8c8}
+.btn-xs{height:28px;padding:0 11px;font-size:12px;border-radius:6px}
+.page{display:none;flex-direction:column;flex:1;overflow:hidden}.page.on{display:flex}
+
+/* ─── FILTER BAR ─── */
+.fbar{background:var(--white);border-bottom:1.5px solid var(--border);padding:8px 18px;display:flex;align-items:center;gap:7px;flex-shrink:0;flex-wrap:wrap}
+.fc{display:flex;align-items:center;gap:4px;padding:5px 10px;border-radius:6px;font-size:12px;border:1.5px solid var(--border);color:var(--ts);background:var(--white);font-family:var(--f);transition:border-color .12s}
+.fc:focus-within{border-color:var(--blue)}
+.fc i{font-size:13px;flex-shrink:0}
+.fc select,.fc input{border:none;background:transparent;font-size:12px;color:var(--text);outline:none;cursor:pointer;font-family:var(--f);max-width:110px}
+.fc-div{width:1px;height:20px;background:var(--border)}
+.astrip{background:#eef3ff;border-bottom:1px solid #c8d8ff;padding:5px 18px;display:none;align-items:center;gap:6px;flex-shrink:0;flex-wrap:wrap}
+.achip{display:inline-flex;align-items:center;gap:4px;background:#fff;border:1px solid #b8cbff;border-radius:12px;padding:2px 9px;font-size:11px;color:#003da0;font-weight:500}
+.achip i{cursor:pointer;font-size:11px}.achip i:hover{color:var(--red)}
+.freset{display:none;align-items:center;gap:4px;cursor:pointer;font-size:12px;color:var(--red);padding:4px 9px;border-radius:6px;font-weight:500}.freset:hover{background:var(--redbg)}
+
+/* ─── TASKS TABLE ─── */
+.tw{flex:1;overflow:auto}
+.mt{width:100%;border-collapse:collapse;table-layout:fixed}
+.mt th{font-size:11px;color:var(--ts);padding:8px 12px;text-align:right;background:#f7f8fc;border-bottom:2px solid var(--border);font-weight:600;position:sticky;top:0;z-index:2;cursor:pointer;white-space:nowrap;text-transform:uppercase;letter-spacing:.3px}
+.mt th:hover{background:#eff1f9;color:var(--blue)}
+.mt th i{font-size:11px;opacity:.5}
+.mt td{font-size:13px;padding:0 12px;border-bottom:1px solid var(--borderl);color:var(--text);background:var(--white);vertical-align:middle;height:44px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;transition:background .1s}
+.mt tr.data-row:hover td{background:#f5f7ff}
+.mt tr.data-row:hover .row-task-actions{opacity:1!important}
+
+/* GROUP HEADER */
+.gh td{background:var(--bg)!important;padding:8px 12px 6px;border-bottom:none;border-top:3px solid var(--border)}
+.gh:first-child td{border-top:none}
+.ghi{display:flex;align-items:center;gap:10px;font-size:12px;font-weight:700;color:var(--text);text-transform:uppercase;letter-spacing:.4px}
+.gdot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.gcnt{font-size:10.5px;color:var(--ts);background:var(--white);border:1px solid var(--border);border-radius:9px;padding:1px 8px;font-weight:600}
+
+/* COLUMN SEPARATOR */
+.mt td.sep{border-right:2px solid var(--borderl)}
+.mt th.sep{border-right:2px solid var(--border)}
+
+/* ADD ROW */
+.add-r td{padding:5px 12px;border-bottom:1px solid var(--borderl);background:var(--white)}
+.add-r-i{display:flex;align-items:center;gap:6px;color:var(--tx);font-size:12.5px;cursor:pointer;padding:3px 0;transition:color .12s}
+.add-r-i:hover{color:var(--blue)}
+
+.nr{text-align:center;padding:48px 20px;color:var(--ts);font-size:13px}
+
+/* BADGES */
+.b{display:inline-flex;align-items:center;justify-content:center;padding:4px 12px;border-radius:6px;font-size:11.5px;font-weight:700;white-space:nowrap;letter-spacing:.2px}
+.b-done{background:#00c16e;color:#fff}
+.b-prog{background:#f0921e;color:#fff}
+.b-stuck{background:#e03355;color:#fff}
+.b-new{background:#5c5fd6;color:#fff}
+.b-pend{background:#e6b800;color:#fff}
+.ph{color:var(--red);font-size:12px;display:flex;align-items:center;gap:2px;font-weight:600}
+.pm{color:var(--org);font-size:12px;display:flex;align-items:center;gap:2px;font-weight:600}
+.pl{color:var(--green);font-size:12px;display:flex;align-items:center;gap:2px;font-weight:600}
+
+/* AVATARS */
+.av{border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;flex-shrink:0}
+.abl{background:#0073ea}.are{background:#e03355}.agr{background:#00c16e}.aor{background:#f0921e}.apu{background:#8b5cf6}
+.avr{display:flex;align-items:center;gap:7px}
+
+/* ACCEPT */
+.accept-b{display:inline-flex;align-items:center;gap:3px;padding:3px 9px;border-radius:5px;font-size:11px;background:var(--yelbg);color:#5a4200;border:1px solid #f0d060;cursor:pointer;font-family:var(--f);font-weight:600;transition:background .12s}
+.accept-b:hover{background:#fff0a0}
+.acctag{display:inline-flex;align-items:center;gap:4px;font-size:11.5px;color:var(--greend);font-weight:500}
+
+/* DONE CHECKBOX */
+.done-cb{width:18px;height:18px;border-radius:50%;border:2px solid var(--border);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;font-size:10px;color:#fff;transition:all .15s;flex-shrink:0;background:transparent}
+.done-cb:hover{border-color:var(--green);background:rgba(0,193,110,.08)}
+.done-cb.checked{background:var(--green);border-color:var(--green)}
+.done-r td{color:var(--tx)!important;text-decoration:line-through;text-decoration-color:var(--tx)}
+
+/* CHAT BTN */
+.chatb{cursor:pointer;color:var(--ts);font-size:15px;display:inline-flex;align-items:center;gap:3px;padding:3px 6px;border-radius:5px;transition:all .12s;position:relative}
+.chatb:hover{background:var(--bluebg);color:var(--blue)}
+.mcnt{background:var(--blue);color:#fff;font-size:8px;border-radius:8px;padding:0 4px;min-width:14px;height:14px;display:inline-flex;align-items:center;justify-content:center}
+.unread-dot{background:var(--red);color:#fff;font-size:8px;border-radius:50%;width:14px;height:14px;display:inline-flex;align-items:center;justify-content:center;position:absolute;top:-4px;left:-4px;font-weight:700}
+
+/* EMAIL ROW */
+.mt tr.email-row td{border-right:3px solid var(--blue)}
+.mt tr.email-row.overdue td{border-right:3px solid var(--red);background:#fff8f9}
+.mt tr.email-row.overdue td{color:var(--redd)}
+
+/* ─── CALENDAR ─── */
+.cal-body{flex:1;overflow-y:auto;padding:14px 18px}
+.dnames{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-bottom:3px}
+.dn{text-align:center;font-size:10.5px;color:var(--ts);padding:4px 0;font-weight:600}
+.mgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.dc{min-height:90px;border:1.5px solid var(--border);border-radius:8px;padding:6px;background:var(--white);cursor:pointer;overflow:hidden;transition:border-color .12s,box-shadow .12s}
+.dc:hover{border-color:#b0b8e8;box-shadow:0 2px 8px rgba(0,0,0,0.07)}
+.dc.today{border:2px solid var(--blue);box-shadow:0 0 0 3px rgba(0,115,234,0.08)}
+.dc.om{opacity:.4;background:var(--bg)}
+.dc.sel{border:2px solid var(--green);background:#f0fdf7}
+.dnum{font-size:11px;color:var(--ts);font-weight:600;margin-bottom:3px}
+.dc.today .dnum{color:var(--blue);font-weight:700}
+.ec{font-size:9px;padding:1px 5px;border-radius:3px;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block;font-weight:500}
+.ev-hol{background:#ccfbf1;color:#0f766e}.ev-vac{background:#ddf0ff;color:#003d7a}.ev-meet{background:#fff3e0;color:#6a3800}.ev-serv{background:#e3f9ee;color:#004d22}.ev-il{background:#ccfbf1;color:#0f766e}.ev-cn{background:#ccfbf1;color:#0f766e}.ev-us{background:#ccfbf1;color:#0f766e}.ev-eu{background:#ccfbf1;color:#0f766e}.ev-intl{background:#ccfbf1;color:#0f766e}
+.sum-panel{background:var(--white);border-top:1.5px solid var(--border);padding:12px 18px;flex-shrink:0}
+.sum-tabs{display:flex;border-bottom:1.5px solid var(--border);margin-bottom:10px}
+.stab{padding:6px 14px;font-size:12.5px;cursor:pointer;color:var(--ts);border-bottom:2.5px solid transparent;font-weight:500;transition:all .15s}
+.stab.active{color:var(--blue);border-bottom-color:var(--blue);font-weight:600}
+.dsp-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.dsec{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:9px 11px}
+.dsec-t{font-size:10px;color:var(--ts);font-weight:700;margin-bottom:6px;text-transform:uppercase;letter-spacing:.4px}
+.di{font-size:12px;color:var(--text);padding:3px 0;border-bottom:1px solid var(--borderl);display:flex;align-items:center;gap:5px}
+.di:last-child{border-bottom:none}
+.de{font-size:11px;color:var(--tx);font-style:italic}
+
+/* ─── PERSONAL ─── */
+.pers-wrap{display:grid;grid-template-columns:200px 1fr;flex:1;overflow:hidden}
+.pers-nav{background:var(--white);border-left:1.5px solid var(--border);display:flex;flex-direction:column;overflow-y:auto}
+.pn-lbl{padding:12px 14px 5px;font-size:9.5px;color:var(--ts);text-transform:uppercase;letter-spacing:.6px;font-weight:700}
+.pni{display:flex;align-items:center;gap:8px;padding:9px 14px;cursor:pointer;font-size:12.5px;color:var(--text);border-bottom:1px solid var(--borderl);transition:background .12s;font-weight:500}
+.pni:hover{background:var(--bg)}.pni.active{background:var(--bluebg);color:var(--blue);font-weight:600;border-right:3px solid var(--blue)}
+.pni i{font-size:15px;color:var(--ts);width:17px;flex-shrink:0}.pni.active i{color:var(--blue)}
+.pn-stat{padding:12px 14px;display:flex;flex-direction:column;gap:8px;margin-top:auto}
+.stat-c{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px 12px}
+.stat-c .sl{font-size:10px;color:var(--ts);margin-bottom:3px;font-weight:600;text-transform:uppercase;letter-spacing:.3px}
+.stat-c .sv{font-size:22px;font-weight:700}
+.pers-content{flex:1;overflow-y:auto;padding:16px 18px;display:none}.pers-content.on{display:block}
+.ps-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:14px;display:flex;align-items:center;justify-content:space-between}
+
+/* KANBAN */
+.kan{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.kc{background:var(--bg);border-radius:10px;padding:12px;border:1.5px solid var(--border)}
+.kct{font-size:10.5px;font-weight:700;color:var(--ts);margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;text-transform:uppercase;letter-spacing:.4px}
+.kcard{background:var(--white);border:1.5px solid var(--border);border-radius:9px;padding:12px;margin-bottom:8px;cursor:grab;min-height:96px;display:flex;flex-direction:column;justify-content:space-between;position:relative;transition:border-color .12s,box-shadow .12s,transform .1s}
+.kcard:hover{border-color:#b0b8e8;box-shadow:0 3px 12px rgba(0,0,0,0.08);transform:translateY(-1px)}
+.kcard.is-email{border-right:3px solid var(--blue)}
+.kcard.is-email.overdue{border-right:3px solid var(--red);background:#fff8f9}
+.kcard.dragging{opacity:.35;cursor:grabbing;transform:scale(.97)}
+.kcard.drag-ph{background:rgba(92,95,214,.05);border:2px dashed rgba(92,95,214,.3);border-radius:9px;min-height:96px}
+.drag-h{position:absolute;top:10px;left:10px;color:var(--tx);font-size:14px;opacity:0;cursor:grab;transition:opacity .12s}.kcard:hover .drag-h{opacity:1}
+.kcard-rank{position:absolute;top:9px;right:9px;font-size:9px;font-weight:700;background:var(--bg);border:1px solid var(--border);border-radius:5px;padding:2px 6px}
+.kcard-t{font-size:13px;font-weight:500;color:var(--text);line-height:1.4;margin-bottom:9px;padding-left:22px;padding-right:36px}
+.kcard-foot{display:flex;align-items:center;justify-content:space-between;gap:5px;flex-wrap:wrap}
+.kcard-left{display:flex;align-items:center;gap:5px;flex-wrap:wrap}
+.prio-pill{display:inline-flex;align-items:center;gap:3px;padding:2px 7px;border-radius:10px;font-size:10.5px;font-weight:600}
+.due-t{font-size:10.5px;color:var(--ts);display:flex;align-items:center;gap:3px;font-weight:500}
+.email-info{font-size:10.5px;color:var(--ts);display:flex;align-items:center;gap:3px;margin-bottom:6px}
+.add-kcard{display:flex;align-items:center;gap:6px;padding:9px 10px;border-radius:8px;cursor:pointer;color:var(--tx);font-size:12px;margin-top:5px;transition:background .12s;font-weight:500}
+.add-kcard:hover{background:rgba(0,115,234,0.07);color:var(--blue)}
+.drop-zone{min-height:60px;border-radius:7px;padding:2px;transition:background .15s}
+.drop-zone.drag-over{background:rgba(92,95,214,0.06);outline:2px dashed rgba(92,95,214,0.28);outline-offset:-2px}
+
+/* ─── USERS ─── */
+.users-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
+.ustat{background:var(--white);border:1.5px solid var(--border);border-radius:10px;padding:14px 16px}
+.ustat-lbl{font-size:10.5px;color:var(--ts);font-weight:600;margin-bottom:4px;text-transform:uppercase;letter-spacing:.3px}
+.ustat-val{font-size:26px;font-weight:700}
+.utbl{width:100%;border-collapse:collapse}
+.utbl th{font-size:11px;color:var(--ts);padding:8px 14px;text-align:right;background:#f7f8fc;border-bottom:2px solid var(--border);font-weight:700;text-transform:uppercase;letter-spacing:.3px}
+.utbl td{font-size:13px;padding:0 14px;height:52px;border-bottom:1px solid var(--borderl);color:var(--text);background:var(--white);vertical-align:middle;transition:background .1s}
+.utbl tr:hover td{background:#f5f7ff}
+.role-badge{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:600}
+.role-admin{background:#ffe4ec;color:#7a0022}
+.role-manager{background:var(--orgbg);color:var(--orgd)}
+.role-user{background:var(--bluebg);color:var(--blued)}
+.dept-tag{display:inline-flex;padding:3px 9px;border-radius:6px;font-size:11.5px;font-weight:600}
+.status-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.row-actions{display:flex;align-items:center;gap:4px;opacity:0;transition:opacity .12s}
+.utbl tr:hover .row-actions{opacity:1}
+.act-btn{width:30px;height:30px;border-radius:6px;display:flex;align-items:center;justify-content:center;cursor:pointer;border:none;background:transparent;font-size:16px;color:var(--ts);transition:background .12s}
+.act-btn:hover{background:var(--bg)}.act-btn.danger:hover{background:var(--redbg);color:var(--redd)}
+
+/* ─── CHAT PANEL ─── */
+.chat-overlay{position:fixed;inset:0;background:rgba(20,23,41,0.5);z-index:80;display:none;align-items:flex-end;justify-content:flex-start}
+.chat-overlay.on{display:flex}
+.chat-panel{width:380px;height:520px;background:var(--white);border-radius:14px;margin:0 0 20px 20px;display:flex;flex-direction:column;box-shadow:0 12px 48px rgba(0,0,0,0.18);overflow:hidden}
+.chat-header{padding:14px 16px;background:var(--sb);display:flex;align-items:center;justify-content:space-between}
+.chat-title{font-size:13.5px;font-weight:600;color:#fff}
+.chat-task{font-size:11px;color:rgba(255,255,255,0.5);margin-top:2px}
+.chat-msgs{flex:1;overflow-y:auto;padding:14px}
+.chat-msg{margin-bottom:12px}
+.chat-msg-header{display:flex;align-items:center;gap:7px;margin-bottom:4px}
+.chat-msg-name{font-size:11.5px;font-weight:600;color:var(--text)}
+.chat-msg-time{font-size:10px;color:var(--tx)}
+.chat-msg-body{background:var(--bg);border-radius:0 9px 9px 9px;padding:9px 12px;font-size:12.5px;color:var(--text);line-height:1.55;max-width:85%;border:1px solid var(--border)}
+.chat-msg.mine .chat-msg-body{background:var(--bluebg);border-color:#b0d0ff;border-radius:9px 0 9px 9px;margin-right:auto}
+.chat-msg.mine{display:flex;flex-direction:column;align-items:flex-end}
+.chat-msg.mine .chat-msg-header{flex-direction:row-reverse}
+.chat-input-wrap{padding:12px;border-top:1px solid var(--border);display:flex;gap:8px}
+.chat-input{flex:1;border:1.5px solid var(--border);border-radius:8px;padding:8px 12px;font-size:13px;font-family:var(--f);color:var(--text);outline:none;resize:none}
+.chat-input:focus{border-color:var(--blue)}
+.chat-send{width:36px;height:36px;background:var(--blue);border:none;border-radius:8px;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px;transition:background .12s}
+.chat-send:hover{background:var(--blued)}
+
+/* ─── MODALS ─── */
+.mbg{display:none;position:fixed;inset:0;background:rgba(20,23,41,0.5);z-index:100;align-items:center;justify-content:center}.mbg.on{display:flex}
+.mbox{background:var(--white);border-radius:12px;width:460px;max-height:90vh;overflow-y:auto;box-shadow:0 12px 48px rgba(0,0,0,0.18)}
+.mh{padding:16px 20px 12px;border-bottom:1.5px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--white);z-index:1}
+.mh h3{font-size:15px;font-weight:700;color:var(--text)}
+.mb{padding:16px 20px}.mf{padding:12px 20px;border-top:1.5px solid var(--border);display:flex;justify-content:flex-end;gap:8px;position:sticky;bottom:0;background:var(--white)}
+.fld{margin-bottom:13px}.fld-l{font-size:12px;color:var(--ts);margin-bottom:5px;font-weight:600}
+.fld input,.fld select,.fld textarea{width:100%;border:1.5px solid var(--border);border-radius:7px;padding:9px 12px;font-size:13px;font-family:var(--f);color:var(--text);outline:none;background:var(--white);transition:border-color .15s}
+.fld input:focus,.fld select:focus,.fld textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(0,115,234,0.1)}
+.fld-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.xb{width:30px;height:30px;border-radius:7px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--ts);font-size:18px;transition:background .12s}.xb:hover{background:var(--bg)}
+.role-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:6px}
+.role-card{border:2px solid var(--border);border-radius:9px;padding:11px 12px;cursor:pointer;transition:all .15s}
+.role-card:hover{border-color:#b0b8e8}
+.role-card.sel{border-color:var(--blue);background:var(--bluebg)}
+.rc-icon{font-size:22px;margin-bottom:6px}
+.rc-title{font-size:12.5px;font-weight:700;color:var(--text)}
+.rc-desc{font-size:10.5px;color:var(--ts);margin-top:2px;line-height:1.4}
+.pass-wrap{position:relative}.pass-wrap input{padding-left:38px}
+.pass-eye{position:absolute;left:11px;top:50%;transform:translateY(-50%);cursor:pointer;color:var(--ts);font-size:17px}
+.sec-div{font-size:11px;font-weight:700;color:var(--ts);margin:14px 0 10px;display:flex;align-items:center;gap:8px;text-transform:uppercase;letter-spacing:.4px}
+.sec-div::after{content:'';flex:1;height:1px;background:var(--borderl)}
+.info-box{background:#eef3ff;border:1px solid #c0d0ff;border-radius:8px;padding:10px 13px;font-size:12px;color:#003da0;display:flex;gap:8px;margin-bottom:12px}
+
+/* NOTIF */
+.notif-panel{position:fixed;top:52px;left:220px;width:300px;background:var(--white);border-radius:11px;border:1.5px solid var(--border);overflow:hidden;z-index:90;box-shadow:0 6px 28px rgba(0,0,0,0.12);display:none}.notif-panel.on{display:block}
+
+/* LOADING */
+.loading{position:fixed;inset:0;background:rgba(255,255,255,0.95);z-index:200;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:14px}
+.spinner{width:40px;height:40px;border:3px solid var(--border);border-top-color:var(--blue);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.auto-wrap{flex:1;overflow-y:auto;padding:16px 18px}
+.note-color-btn{width:20px;height:20px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:all .15s;flex-shrink:0}
+.note-color-btn:hover{transform:scale(1.2);border-color:rgba(0,0,0,0.2)}
+.sticky-note{position:absolute;width:190px;min-height:170px;border-radius:3px 12px 12px 3px;padding:0;cursor:default;box-shadow:3px 4px 14px rgba(0,0,0,0.15),0 1px 3px rgba(0,0,0,0.1);transition:box-shadow .15s;user-select:none;display:flex;flex-direction:column;z-index:10}
+.sticky-note:hover{box-shadow:4px 6px 20px rgba(0,0,0,0.22),0 2px 6px rgba(0,0,0,0.12);z-index:20}
+.sticky-note.dragging-note{box-shadow:8px 12px 32px rgba(0,0,0,0.3);z-index:100;transform:rotate(2deg) scale(1.02)}
+.note-header{height:30px;border-radius:3px 12px 0 0;display:flex;align-items:center;justify-content:space-between;padding:0 10px;cursor:grab;filter:brightness(0.92)}
+.note-header:active{cursor:grabbing}
+.note-delete{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:13px;color:rgba(0,0,0,0.4);transition:all .15s;background:transparent;border:none}
+.note-delete:hover{background:rgba(0,0,0,0.15);color:rgba(0,0,0,0.8)}
+.note-title-input{background:transparent;border:none;outline:none;font-size:13px;font-weight:700;color:rgba(0,0,0,0.75);width:100%;font-family:var(--f);padding:8px 10px 4px;resize:none}
+.note-body-input{background:transparent;border:none;outline:none;font-size:12px;color:rgba(0,0,0,0.7);width:100%;font-family:var(--f);padding:0 10px 10px;resize:none;flex:1;line-height:1.6;min-height:100px}
+.note-date{font-size:9.5px;color:rgba(0,0,0,0.35);padding:0 10px 7px;margin-top:auto}
+</style>
+</head>
+<body>
+
+<!-- ═══ LOGIN ═══ -->
+<div class="login-screen" id="login-screen">
+  <div class="login-box">
+    <div class="login-logo">
+      <div class="login-mark">A</div>
+      <div>
+        <div style="font-size:20px;font-weight:700;color:var(--text)">אלקון</div>
+        <div style="font-size:11px;color:var(--ts)">ממב מכשירי בקרה</div>
+      </div>
+    </div>
+    <div class="login-subtitle">התחבר עם שם המשתמש והסיסמא שלך</div>
+    <div class="login-fld"><div class="login-lbl">שם משתמש</div><input class="login-input" id="l-user" placeholder="לדוגמה: yossi.a" onkeydown="if(event.key==='Enter')doLogin()"/></div>
+    <div class="login-fld"><div class="login-lbl">סיסמא</div><input class="login-input" id="l-pass" type="password" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()"/></div>
+    <button class="login-btn" onclick="doLogin()">כניסה למערכת</button>
+    <div class="login-err" id="login-err">שם משתמש או סיסמא שגויים</div>
+    <div class="login-users">
+      <div class="login-users-title">כניסה מהירה (פיילוט)</div>
+      <div id="quick-users"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ APP ═══ -->
+<div class="app" id="app" style="display:none">
+<div class="sb">
+  <div class="sb-logo">
+    <div class="sb-mark">A</div>
+    <div><div class="sb-name">אלקון</div><div class="sb-sub">ממב מכשירי בקרה</div></div>
+  </div>
+  <div class="sb-conn"><div class="sb-conn-dot"></div><span id="conn-txt">מתחבר...</span></div>
+  <div class="sb-apps">
+    <div class="sb-sec-lbl">יישומים</div>
+    <div class="app-btn active" id="app-tasks" onclick="switchApp('tasks',this)">
+      <div class="app-icon" style="background:rgba(0,115,234,0.25)"><i class="ti ti-layout-board" style="color:#5aaeff"></i></div>משימות
+    </div>
+    <div class="app-btn" id="app-calendar" onclick="switchApp('calendar',this)">
+      <div class="app-icon" style="background:rgba(0,193,110,0.2)"><i class="ti ti-calendar" style="color:#00c16e"></i></div>לו״ז חברה
+    </div>
+    <div class="app-btn" id="app-personal" onclick="switchApp('personal',this)">
+      <div class="app-icon" style="background:rgba(240,146,30,0.2)"><i class="ti ti-user" style="color:#f0921e"></i></div>האזור האישי
+    </div>
+    <div class="app-btn" id="app-users" onclick="switchApp('users',this)">
+      <div class="app-icon" style="background:rgba(139,92,246,0.2)"><i class="ti ti-users" style="color:#8b5cf6"></i></div>משתמשים
+    </div>
+  </div>
+  <div class="sb-nav" id="sb-nav"></div>
+  <div class="sb-user">
+    <div class="sb-uav abl" id="sb-user-av">יא</div>
+    <div>
+      <div style="font-size:12px;color:#fff;font-weight:600" id="sb-user-name">יוסי אלקון</div>
+      <div style="font-size:10px;color:rgba(255,255,255,0.3)" id="sb-user-role">מנהל ראשי</div>
+    </div>
+    <i class="ti ti-logout sb-logout" onclick="doLogout()" title="יציאה"></i>
+  </div>
+</div>
+
+<div class="main">
+  <div class="topnav">
+    <span class="tn-title" id="pg-title">משימות</span>
+    <div class="tn-tabs" id="tn-tabs">
+      <div class="tn-tab active" onclick="switchTab(this,'all')">הכל</div>
+      <div class="tn-tab" onclick="switchTab(this,'mine')">שלי</div>
+      <div class="tn-tab" onclick="switchTab(this,'pending')">ממתין לאישור <span id="ptab-cnt" style="background:var(--org);color:#fff;font-size:9px;border-radius:8px;padding:1px 6px;margin-right:3px;display:none">0</span></div>
+    </div>
+    <div class="tn-right">
+      <div class="tn-icon" onclick="toggleNotif()"><i class="ti ti-bell"></i><div class="npip" id="npip"></div></div>
+      <button class="btn btn-p btn-xs" onclick="topAdd()"><i class="ti ti-plus" style="font-size:13px"></i><span id="top-add-lbl">משימה חדשה</span></button>
+    </div>
+  </div>
+
+  <!-- TASKS -->
+  <div class="page on" id="pg-tasks">
+    <div class="fbar">
+      <div class="fc"><i class="ti ti-user"></i><select id="f-owner" onchange="applyF()"><option value="">אחראי</option></select></div>
+      <div class="fc"><i class="ti ti-circle-dot"></i><select id="f-status" onchange="applyF()"><option value="">סטטוס</option><option>חדש</option><option>ממתין לאישור</option><option>בביצוע</option><option>תקוע</option><option>הושלם</option></select></div>
+      <div class="fc"><i class="ti ti-arrow-up"></i><select id="f-prio" onchange="applyF()"><option value="">עדיפות</option><option>גבוהה</option><option>בינונית</option><option>נמוכה</option></select></div>
+      <div class="fc"><i class="ti ti-building"></i><select id="f-dept" onchange="applyF()"><option value="">מחלקה</option><option>הנהלה</option><option>מכירות</option><option>שירות</option><option>תפעול</option><option>ייצור</option></select></div>
+      <div class="fc-div"></div>
+      <div class="fc"><i class="ti ti-search"></i><input type="text" id="f-search" placeholder="חיפוש..." oninput="applyF()"/></div>
+      <div id="f-reset" class="freset" onclick="resetF()"><i class="ti ti-x" style="font-size:12px"></i>נקה</div>
+    </div>
+    <div class="astrip" id="astrip"><i class="ti ti-filter" style="font-size:12px;color:#003da0"></i><span style="font-size:11px;color:#003da0;font-weight:600">סינון פעיל:</span><div id="strip-chips"></div></div>
+    <div class="tw">
+      <table class="mt">
+        <colgroup><col style="width:44px"><col style="width:200px"><col style="width:100px"><col style="width:100px"><col style="width:88px"><col style="width:92px"><col style="width:72px"><col style="width:82px"><col style="width:120px"><col style="width:50px"></colgroup>
+        <thead><tr>
+          <th class="sep"></th>
+          <th class="sep" onclick="sortT('name')">משימה <i class="ti ti-arrows-sort"></i></th>
+          <th class="sep" onclick="sortT('creator')">יוצר <i class="ti ti-arrows-sort"></i></th>
+          <th class="sep" onclick="sortT('owner')">אחראי <i class="ti ti-arrows-sort"></i></th>
+          <th class="sep" onclick="sortT('dept')">מחלקה <i class="ti ti-arrows-sort"></i></th>
+          <th class="sep" onclick="sortT('status')">סטטוס <i class="ti ti-arrows-sort"></i></th>
+          <th class="sep" onclick="sortT('prio')">עדיפות <i class="ti ti-arrows-sort"></i></th>
+          <th class="sep" onclick="sortT('due_date')">יעד <i class="ti ti-arrows-sort"></i></th>
+          <th class="sep">קבלת משימה</th>
+          <th></th>
+        </tr></thead>
+        <tbody id="task-tb"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- INBOX -->
+  <div class="page" id="pg-inbox">
+    <div class="fbar"><span style="font-size:13px;font-weight:700;color:var(--text)">📥 משימות שהוקצו לי – ממתינות לאישור</span></div>
+    <div style="flex:1;overflow-y:auto;padding:16px 18px" id="inbox-list"></div>
+  </div>
+
+  <!-- DONE -->
+  <div class="page" id="pg-done">
+    <div class="fbar"><span style="font-size:13px;font-weight:700;color:var(--text)">✅ משימות שהושלמו</span></div>
+    <div class="tw"><table class="mt">
+      <colgroup><col style="width:44px"><col style="width:220px"><col style="width:100px"><col style="width:100px"><col style="width:100px"><col style="width:72px"><col style="width:82px"><col style="width:44px"></colgroup>
+      <thead><tr><th></th><th>משימה</th><th>יוצר</th><th>אחראי</th><th>מחלקה</th><th>עדיפות</th><th>הושלם</th><th></th></tr></thead>
+      <tbody id="done-tb"></tbody>
+    </table></div>
+  </div>
+
+  <!-- CALENDAR -->
+  <div class="page" id="pg-calendar">
+    <div class="fbar">
+      <div class="fc"><i class="ti ti-building"></i><select id="cf-dept" onchange="applyCalF()"><option value="">מחלקה</option><option>הנהלה</option><option>מכירות</option><option>שירות</option><option>תפעול</option><option>ייצור</option></select></div>
+      <div class="fc"><i class="ti ti-calendar-event"></i><select id="cf-type" onchange="applyCalF()"><option value="">סוג</option><option value="ev-vac">חופשה</option><option value="ev-meet">פגישה</option><option value="ev-hol">חגים ומועדים</option></select></div>
+      <div class="fc"><i class="ti ti-flag"></i><select id="cf-country" onchange="applyCalF()"><option value="">כל המדינות</option><option value="il">🇮🇱 ישראל</option><option value="cn">🇨🇳 סין</option><option value="us">🇺🇸 ארה"ב</option><option value="eu">🇪🇺 אירופה</option></select></div>
+      <div class="fc-div"></div>
+      <button class="btn btn-s btn-xs" onclick="prevM()"><i class="ti ti-chevron-right"></i></button>
+      <span style="font-size:13px;font-weight:700;color:var(--text);min-width:110px;text-align:center" id="cal-title">יוני 2026</span>
+      <button class="btn btn-s btn-xs" onclick="nextM()"><i class="ti ti-chevron-left"></i></button>
+      <button class="btn btn-s btn-xs" onclick="goToday()">היום</button>
+      <div style="margin-right:auto;display:flex;gap:6px">
+        <button class="btn btn-s btn-xs" onclick="openM('vacation')"><i class="ti ti-umbrella" style="font-size:12px"></i>בקשת חופש</button>
+        <button class="btn btn-p btn-xs" onclick="openM('event')"><i class="ti ti-plus" style="font-size:12px"></i>אירוע</button>
+      </div>
+    </div>
+    <div class="cal-body">
+      <div class="dnames"><div class="dn">א׳</div><div class="dn">ב׳</div><div class="dn">ג׳</div><div class="dn">ד׳</div><div class="dn">ה׳</div><div class="dn">ו׳</div><div class="dn">ש׳</div></div>
+      <div class="mgrid" id="cal-grid"></div>
+    </div>
+    <div class="sum-panel">
+      <div class="sum-tabs"><div class="stab active" id="st-day" onclick="setSumTab('day')">תקציר יומי</div><div class="stab" id="st-week" onclick="setSumTab('week')">תקציר שבועי</div></div>
+      <div id="sum-day"><div style="font-size:12.5px;font-weight:600;color:var(--text);margin-bottom:8px" id="sum-day-title">לחץ על יום</div><div class="dsp-grid" id="dsp-grid"><div class="dsec"><div class="dsec-t">חופשות</div><div class="de">—</div></div><div class="dsec"><div class="dsec-t">מיקומים</div><div class="de">—</div></div><div class="dsec"><div class="dsec-t">אירועים</div><div class="de">—</div></div><div class="dsec"><div class="dsec-t">חגים</div><div class="de">—</div></div></div></div>
+      <div id="sum-week" style="display:none"><div style="background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px;font-size:12px;color:var(--ts)" id="ws-body">בחר תצוגה שבועית</div></div>
+    </div>
+  </div>
+
+  <!-- PERSONAL -->
+  <div class="page" id="pg-personal">
+    <div class="pers-wrap">
+      <div class="pers-nav">
+        <div class="pn-lbl">האזור שלי</div>
+        <div class="pni active" onclick="persNav(this,'ptasks')"><i class="ti ti-checkbox"></i>המשימות שלי</div>
+
+        <div class="pni" onclick="persNav(this,'pnotes')"><i class="ti ti-notes"></i>פתקים</div>
+        <div class="pni" onclick="persNav(this,'parchive')"><i class="ti ti-folders"></i>ארכיון</div>
+        <div class="pn-stat">
+          <div class="stat-c"><div class="sl">משימות פתוחות</div><div class="sv" style="color:var(--blue)" id="stat-open">-</div></div>
+          <div class="stat-c"><div class="sl">מיילים ממתינים</div><div class="sv" style="color:var(--org)" id="stat-emails">-</div></div>
+          <div class="stat-c"><div class="sl">באיחור</div><div class="sv" style="color:var(--red)" id="stat-overdue">-</div></div>
+        </div>
+      </div>
+      <div style="flex:1;overflow:hidden;display:flex;flex-direction:column">
+        <div class="pers-content on" id="pc-ptasks">
+          <div class="ps-title">המשימות שלי<button class="btn btn-p btn-xs" onclick="openM('ptask')"><i class="ti ti-plus" style="font-size:12px"></i>הוסף</button></div>
+          <div class="kan" id="personal-kan"></div>
+        </div>
+
+        <div class="pers-content" id="pc-pnotes" style="position:relative;overflow:hidden;padding:0;height:100%">
+          <div id="notes-toolbar" style="background:var(--white);border-bottom:1.5px solid var(--border);padding:8px 16px;display:flex;align-items:center;gap:8px;flex-shrink:0;position:relative;z-index:10">
+            <span style="font-size:13.5px;font-weight:700;color:var(--text)">פתקים</span>
+            <div style="display:flex;gap:5px;margin-right:8px">
+              <div class="note-color-btn" style="background:#fff9c4" onclick="setNoteColor('#fff9c4')" title="צהוב"></div>
+              <div class="note-color-btn" style="background:#ffd6d6" onclick="setNoteColor('#ffd6d6')" title="ורוד"></div>
+              <div class="note-color-btn" style="background:#c8f0c8" onclick="setNoteColor('#c8f0c8')" title="ירוק"></div>
+              <div class="note-color-btn" style="background:#c8dfff" onclick="setNoteColor('#c8dfff')" title="כחול"></div>
+              <div class="note-color-btn" style="background:#ffddb3" onclick="setNoteColor('#ffddb3')" title="כתום"></div>
+              <div class="note-color-btn" style="background:#e8d4ff" onclick="setNoteColor('#e8d4ff')" title="סגול"></div>
+            </div>
+            <button class="btn btn-p btn-xs" onclick="addStickyNote()"><i class="ti ti-plus" style="font-size:12px"></i>פתק חדש</button>
+          </div>
+          <div id="notes-board" style="position:relative;flex:1;overflow:hidden;height:calc(100% - 50px);background:repeating-linear-gradient(0deg,transparent,transparent 24px,rgba(0,0,0,0.03) 24px,rgba(0,0,0,0.03) 25px)"></div>
+        </div>
+        <div class="pers-content" id="pc-parchive">
+          <div class="ps-title">ארכיון מסמכים<button class="btn btn-p btn-xs" onclick="openM('upload')"><i class="ti ti-upload" style="font-size:11px"></i>העלה</button></div>
+          <div style="text-align:center;padding:36px;color:var(--ts);font-size:13px">אין מסמכים עדיין</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- USERS -->
+  <div class="page" id="pg-users">
+    <div class="fbar">
+      <div class="fc"><i class="ti ti-search"></i><input type="text" id="u-search" placeholder="חיפוש משתמש..." oninput="renderUsers()"/></div>
+      <div class="fc"><i class="ti ti-shield-half"></i><select id="u-filter-role" onchange="renderUsers()"><option value="">כל התפקידים</option><option value="admin">מנהל ראשי</option><option value="manager">מנהל מחלקה</option><option value="user">משתמש</option></select></div>
+      <div class="fc"><i class="ti ti-building"></i><select id="u-filter-dept" onchange="renderUsers()"><option value="">כל המחלקות</option><option>מכירות</option><option>שירות</option><option>תפעול</option><option>ייצור</option></select></div>
+      <div style="margin-right:auto"><button class="btn btn-p btn-xs" onclick="openM('add-user')"><i class="ti ti-user-plus" style="font-size:13px"></i>הוסף משתמש</button></div>
+    </div>
+    <div style="flex:1;overflow-y:auto;padding:16px 18px">
+      <div class="users-stats" id="users-stats"></div>
+      <div style="background:var(--white);border:1.5px solid var(--border);border-radius:12px;overflow:hidden">
+        <table class="utbl"><thead><tr><th style="width:44px"></th><th style="width:130px">שם מלא</th><th style="width:100px">שם כניסה</th><th>מייל (M365)</th><th style="width:90px">מחלקה</th><th style="width:120px">תפקיד</th><th style="width:75px">סטטוס</th><th style="width:80px"></th></tr></thead>
+        <tbody id="users-tbody"></tbody></table>
+      </div>
+    </div>
+  </div>
+
+  <!-- AUTO -->
+  <div class="page" id="pg-auto">
+    <div class="fbar"><span style="font-size:13px;font-weight:700;color:var(--text)">⚡ אוטומציות</span><div style="margin-right:auto"><button class="btn btn-p btn-xs" onclick="openM('auto')"><i class="ti ti-plus" style="font-size:12px"></i>חוק חדש</button></div></div>
+    <div class="auto-wrap" id="auto-list"></div>
+  </div>
+</div>
+</div>
+
+<!-- CHAT PANEL -->
+<div class="chat-overlay" id="chat-overlay" onclick="closeChatIf(event)">
+  <div class="chat-panel">
+    <div class="chat-header">
+      <div>
+        <div class="chat-title">💬 צ'אט משימה</div>
+        <div class="chat-task" id="chat-task-name">—</div>
+      </div>
+      <div class="xb" style="color:rgba(255,255,255,0.7)" onclick="closeChat()"><i class="ti ti-x"></i></div>
+    </div>
+    <div class="chat-msgs" id="chat-msgs"></div>
+    <div class="chat-input-wrap">
+      <textarea class="chat-input" id="chat-input" rows="1" placeholder="כתוב הודעה..." onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendChatMsg()}"></textarea>
+      <button class="chat-send" onclick="sendChatMsg()"><i class="ti ti-send"></i></button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="mbg" id="mbg"><div class="mbox"><div class="mh"><h3 id="m-title">טופס</h3><div class="xb" onclick="closeM()"><i class="ti ti-x"></i></div></div><div class="mb" id="m-body"></div><div class="mf" id="m-foot"></div></div></div>
+
+<!-- NOTIF PANEL -->
+<div class="notif-panel" id="notif-panel">
+  <div style="padding:12px 16px;border-bottom:1.5px solid var(--border);display:flex;align-items:center;justify-content:space-between">
+    <span style="font-size:13px;font-weight:700;color:var(--text)">התראות</span>
+    <span style="font-size:11px;color:var(--blue);cursor:pointer;font-weight:500" onclick="markAllRead()">סמן הכל כנקרא</span>
+  </div>
+  <div id="notif-list" style="max-height:300px;overflow-y:auto"></div>
+</div>
+
+<div class="loading" id="loading"><div class="spinner"></div><div style="font-size:13px;color:var(--ts);font-weight:500" id="loading-txt">מתחבר ל-Supabase...</div></div>
+
+<script>
+// ═══ SUPABASE ═══
+const SB='https://mphnjhmtpglujncjobxc.supabase.co';
+const SK='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1waG5qaG10cGdsdWpuY2pvYnhjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEwOTM3NTQsImV4cCI6MjA5NjY2OTc1NH0.vJ0zzaPN7-fgww3kyxmtlKaxzACUFU6w4i9a8mwDcdk';
+const H={'apikey':SK,'Authorization':'Bearer '+SK,'Content-Type':'application/json'};
+const db={
+  async get(t,q){try{const r=await fetch(SB+'/rest/v1/'+t+'?'+q,{headers:H});return r.ok?r.json():[];}catch(e){return[];}},
+  async post(t,d){try{const r=await fetch(SB+'/rest/v1/'+t,{method:'POST',headers:{...H,'Prefer':'return=representation'},body:JSON.stringify(d)});return r.ok?r.json():null;}catch(e){return null;}},
+  async patch(t,d,q){try{const r=await fetch(SB+'/rest/v1/'+t+'?'+q,{method:'PATCH',headers:{...H,'Prefer':'return=representation'},body:JSON.stringify(d)});return r.ok?r.json():null;}catch(e){return null;}},
+  async del(t,q){try{await fetch(SB+'/rest/v1/'+t+'?'+q,{method:'DELETE',headers:H});}catch(e){}}
+};
+
+// ═══ USERS / AUTH ═══
+// ── DEFAULT USERS (used only if localStorage is empty) ──
+const DEFAULT_USERS=[
+  {id:'u1',name:'טל דולב',username:'tal',email:'tal@elcon.co.il',password:'1234',role:'admin',dept:'הנהלה',color:'#0073ea',initials:'טד',lastLogin:'',active:true},
+  {id:'u2',name:'גיורא ברנדוין',username:'giora',email:'giora@elcon.co.il',password:'1234',role:'admin',dept:'הנהלה',color:'#e03355',initials:'גב',lastLogin:'',active:true},
+  {id:'u3',name:'איליה שטדלין',username:'iliya',email:'support@elcon.co.il',password:'1234',role:'user',dept:'שירות',color:'#f0921e',initials:'אש',lastLogin:'',active:true},
+];
+
+// ── USERS – loaded from localStorage, fallback to defaults ──
+const APP_VERSION_KEY='elkon-version';
+const APP_VER='v6';
+// Clear old data if version mismatch – runs immediately
+if(localStorage.getItem(APP_VERSION_KEY)!==APP_VER){
+  localStorage.removeItem('elkon-users');
+  localStorage.setItem(APP_VERSION_KEY,APP_VER);
+}
+function loadUsers(){
+  try{
+    const s=localStorage.getItem('elkon-users');
+    if(s){const arr=JSON.parse(s);if(Array.isArray(arr)&&arr.length>0)return arr;}
+  }catch(e){}
+  return JSON.parse(JSON.stringify(DEFAULT_USERS)); // deep copy
+}
+function saveUsers(){
+  try{localStorage.setItem('elkon-users',JSON.stringify(USERS));}catch(e){}
+}
+let USERS=loadUsers();
+let currentUser=null;
+
+function doLogin(){
+  USERS=loadUsers(); // always fresh
+  const u=document.getElementById('l-user').value.trim();
+  const p=document.getElementById('l-pass').value;
+  const found=USERS.find(x=>x.username===u&&x.password===p&&x.active);
+  if(!found){document.getElementById('login-err').style.display='block';return;}
+  document.getElementById('login-err').style.display='none';
+  found.lastLogin='היום '+new Date().toLocaleTimeString('he-IL',{hour:'2-digit',minute:'2-digit'});
+  saveUsers();
+  currentUser=found;
+  sessionStorage.setItem('elkon-user',JSON.stringify(found));
+  startApp();
+}
+function quickLogin(id){
+  USERS=loadUsers();
+  const u=USERS.find(x=>x.id===id);if(!u)return;
+  u.lastLogin='היום '+new Date().toLocaleTimeString('he-IL',{hour:'2-digit',minute:'2-digit'});
+  saveUsers();
+  currentUser=u;sessionStorage.setItem('elkon-user',JSON.stringify(u));
+  startApp();
+}
+function doLogout(){
+  sessionStorage.removeItem('elkon-user');currentUser=null;
+  document.getElementById('app').style.display='none';
+  document.getElementById('login-screen').style.display='flex';
+  document.getElementById('l-user').value='';document.getElementById('l-pass').value='';
+  renderQuickUsers(); // refresh with latest users
+}
+function renderQuickUsers(){
+  USERS=loadUsers();
+  const roles={admin:'מנהל ראשי',manager:'מנהל מחלקה',user:'משתמש'};
+  document.getElementById('quick-users').innerHTML=USERS.filter(u=>u.active).map(u=>`
+    <div class="login-user-chip" onclick="quickLogin('${u.id}')">
+      <div class="luc-av" style="background:${u.color}">${u.initials}</div>
+      <div><div class="luc-name">${u.name}</div><div class="luc-role">${roles[u.role]} · ${u.dept}</div></div>
+    </div>`).join('');
+}
+function startApp(){
+  document.getElementById('login-screen').style.display='none';
+  document.getElementById('app').style.display='flex';
+  document.getElementById('sb-user-av').textContent=currentUser.initials;
+  document.getElementById('sb-user-av').style.background=currentUser.color;
+  document.getElementById('sb-user-name').textContent=currentUser.name;
+  const roles={admin:'מנהל ראשי',manager:'מנהל מחלקה',user:'משתמש'};
+  document.getElementById('sb-user-role').textContent=roles[currentUser.role]+' · '+currentUser.dept;
+  // hide users tab for non-admin
+  document.getElementById('app-users').style.display=currentUser.role==='admin'?'flex':'none';
+  populateOwnerFilter();
+  renderSubNav('tasks');
+  renderNotifs();
+  loadAll();
+}
+
+// ═══ DATA ═══
+const DC={'מכירות':'#e44cc0','שירות':'#0073ea','תפעול':'#f0921e','ייצור':'#00c16e','הנהלה':'#5c5fd6'};
+const DC_BG={'מכירות':'#fce4f5','שירות':'#e8f0ff','תפעול':'#fff4e3','ייצור':'#e3faf0','הנהלה':'#ededfc'};
+const HM=['ינואר','פברואר','מרץ','אפריל','מאי','יוני','יולי','אוגוסט','ספטמבר','אוקטובר','נובמבר','דצמבר'];
+const PM={high:{c:'#e03355',bg:'#ffe4ec',l:'גבוהה'},med:{c:'#f0921e',bg:'#fff0db',l:'בינונית'},low:{c:'#00c16e',bg:'#d8f5eb',l:'נמוכה'}};
+const TODAY=new Date(),TK=TODAY.getFullYear()+'-'+(TODAY.getMonth()+1)+'-'+TODAY.getDate();
+let tasks=[],calEvs=[],calVacs=[];
+
+// STATIC HOLIDAYS 2026
+const STATIC_HOLIDAYS=[
+  {id:"il-purim",type:"ev-hol",title:"🇮🇱 פורים",from_date:"2026-03-03",to_date:"2026-03-03"},
+  {id:"il-purim2",type:"ev-hol",title:"🇮🇱 שושן פורים",from_date:"2026-03-04",to_date:"2026-03-04"},
+  {id:"il-pesach1",type:"ev-hol",title:"🇮🇱 פסח א",from_date:"2026-04-01",to_date:"2026-04-01"},
+  {id:"il-pesach-hol",type:"ev-hol",title:"🇮🇱 חול המועד פסח",from_date:"2026-04-02",to_date:"2026-04-07"},
+  {id:"il-pesach7",type:"ev-hol",title:"🇮🇱 פסח ז",from_date:"2026-04-07",to_date:"2026-04-07"},
+  {id:"il-yomhashoah",type:"ev-hol",title:"🇮🇱 יום השואה",from_date:"2026-04-09",to_date:"2026-04-09"},
+  {id:"il-yomhazikaron",type:"ev-hol",title:"🇮🇱 יום הזיכרון",from_date:"2026-04-21",to_date:"2026-04-21"},
+  {id:"il-independence",type:"ev-hol",title:"🇮🇱 יום העצמאות",from_date:"2026-04-22",to_date:"2026-04-22"},
+  {id:"il-lag",type:"ev-hol",title:"🇮🇱 לג בעומר",from_date:"2026-05-06",to_date:"2026-05-06"},
+  {id:"il-shavuot",type:"ev-hol",title:"🇮🇱 שבועות",from_date:"2026-05-20",to_date:"2026-05-21"},
+  {id:"il-tisha",type:"ev-hol",title:"🇮🇱 תשעה באב",from_date:"2026-08-02",to_date:"2026-08-02"},
+  {id:"il-rh1",type:"ev-hol",title:"🇮🇱 ראש השנה",from_date:"2026-09-11",to_date:"2026-09-12"},
+  {id:"il-kippur",type:"ev-hol",title:"🇮🇱 יום כיפור",from_date:"2026-09-20",to_date:"2026-09-20"},
+  {id:"il-sukkot1",type:"ev-hol",title:"🇮🇱 סוכות",from_date:"2026-09-25",to_date:"2026-09-25"},
+  {id:"il-sukkot-hol",type:"ev-hol",title:"🇮🇱 חול המועד סוכות",from_date:"2026-09-26",to_date:"2026-10-01"},
+  {id:"il-shmini",type:"ev-hol",title:"🇮🇱 שמחת תורה",from_date:"2026-10-02",to_date:"2026-10-02"},
+  {id:"il-hanukka",type:"ev-hol",title:"🇮🇱 חנוכה",from_date:"2026-12-04",to_date:"2026-12-12"},
+  {id:"cn-newyear",type:"ev-hol",title:"🇨🇳 ראש השנה הסיני",from_date:"2026-02-17",to_date:"2026-02-23"},
+  {id:"cn-qingming",type:"ev-hol",title:"🇨🇳 פסטיבל צינגמינג",from_date:"2026-04-04",to_date:"2026-04-06"},
+  {id:"cn-labor",type:"ev-hol",title:"🇨🇳 יום העבודה",from_date:"2026-05-01",to_date:"2026-05-05"},
+  {id:"cn-dragon",type:"ev-hol",title:"🇨🇳 פסטיבל הסירות",from_date:"2026-06-19",to_date:"2026-06-21"},
+  {id:"cn-mid-autumn",type:"ev-hol",title:"🇨🇳 פסטיבל אמצע הסתיו",from_date:"2026-09-24",to_date:"2026-09-26"},
+  {id:"cn-national",type:"ev-hol",title:"🇨🇳 יום לאומי סין",from_date:"2026-10-01",to_date:"2026-10-07"},
+  {id:"us-jan1",type:"ev-hol",title:"🇺🇸 New Year",from_date:"2026-01-01",to_date:"2026-01-01"},
+  {id:"us-mlk",type:"ev-hol",title:"🇺🇸 MLK Day",from_date:"2026-01-19",to_date:"2026-01-19"},
+  {id:"us-pres",type:"ev-hol",title:"🇺🇸 Presidents Day",from_date:"2026-02-16",to_date:"2026-02-16"},
+  {id:"us-memorial",type:"ev-hol",title:"🇺🇸 Memorial Day",from_date:"2026-05-25",to_date:"2026-05-25"},
+  {id:"us-july4",type:"ev-hol",title:"🇺🇸 Independence Day",from_date:"2026-07-04",to_date:"2026-07-04"},
+  {id:"us-laborday",type:"ev-hol",title:"🇺🇸 Labor Day",from_date:"2026-09-07",to_date:"2026-09-07"},
+  {id:"us-thanksgiving",type:"ev-hol",title:"🇺🇸 Thanksgiving",from_date:"2026-11-26",to_date:"2026-11-26"},
+  {id:"us-christmas",type:"ev-hol",title:"🇺🇸 Christmas",from_date:"2026-12-25",to_date:"2026-12-25"},
+  {id:"eu-jan1",type:"ev-hol",title:"🇪🇺 New Year",from_date:"2026-01-01",to_date:"2026-01-01"},
+  {id:"eu-goodfriday",type:"ev-hol",title:"🇪🇺 Good Friday",from_date:"2026-04-03",to_date:"2026-04-03"},
+  {id:"eu-easter",type:"ev-hol",title:"🇪🇺 Easter",from_date:"2026-04-05",to_date:"2026-04-06"},
+  {id:"eu-labor",type:"ev-hol",title:"🇪🇺 Labour Day",from_date:"2026-05-01",to_date:"2026-05-01"},
+  {id:"eu-ascension",type:"ev-hol",title:"🇪🇺 Ascension Day",from_date:"2026-05-14",to_date:"2026-05-14"},
+  {id:"eu-assumption",type:"ev-hol",title:"🇪🇺 Assumption",from_date:"2026-08-15",to_date:"2026-08-15"},
+  {id:"eu-allsaints",type:"ev-hol",title:"🇪🇺 All Saints Day",from_date:"2026-11-01",to_date:"2026-11-01"},
+  {id:"eu-christmas",type:"ev-hol",title:"🇪🇺 Christmas",from_date:"2026-12-25",to_date:"2026-12-25"},
+  {id:"eu-boxing",type:"ev-hol",title:"🇪🇺 Boxing Day",from_date:"2026-12-26",to_date:"2026-12-26"},
+];
+
+let pCards={todo:[],prog:[],done:[]},eCards={todo:[],prog:[],done:[]};
+let calY=2026,calMo=5,selDay=null,calFD={dept:'',type:'',country:''};
+let sortC='',sortD=1,activeTab='all',activeApp='tasks',activePage='tasks';
+let filt={owner:'',status:'',prio:'',dept:'',search:''};
+let notifs=[],chatTaskId=null,chatMsgs={},chatUnread={};
+
+function av(name,sz){sz=sz||22;const u=USERS.find(x=>x.name===name)||{initials:(name||'?')[0].toUpperCase(),color:'#888'};return'<div class="av" style="width:'+sz+'px;height:'+sz+'px;font-size:'+Math.round(sz*.38)+'px;background:'+u.color+'">'+u.initials+'</div>';}
+const sb=s=>{const m={בביצוע:'b-prog',תקוע:'b-stuck',חדש:'b-new',הושלם:'b-done','ממתין לאישור':'b-pend'};return'<span class="b '+(m[s]||'b-new')+'">'+s+'</span>';};
+const pb=p=>{const lbl={high:'גבוהה',med:'בינונית',low:'נמוכה'};const L=lbl[p]||p||'בינונית';if(p==='high'||p==='גבוהה')return'<span class="ph"><i class="ti ti-arrow-up" style="font-size:11px"></i>'+L+'</span>';if(p==='low'||p==='נמוכה')return'<span class="pl"><i class="ti ti-arrow-down" style="font-size:11px"></i>'+L+'</span>';return'<span class="pm"><i class="ti ti-minus" style="font-size:11px"></i>'+L+'</span>';};
+const fd=s=>{if(!s)return'';const d=new Date(s),n=new Date();n.setHours(0,0,0,0);d.setHours(0,0,0,0);const str=String(d.getDate()).padStart(2,'0')+'/'+String(d.getMonth()+1).padStart(2,'0');return d<n?'<span style="color:var(--red);font-weight:700">'+str+'</span>':str;};
+const dA=d=>Math.floor((TODAY-new Date(d))/864e5);
+const isOD=c=>c.is_email&&c.status!=='בביצוע'&&c.status!=='הושלם'&&dA(c.sent_date||c.created_at)>3;
+
+function populateOwnerFilter(){
+  const sel=document.getElementById('f-owner');
+  sel.innerHTML='<option value="">אחראי</option>'+USERS.map(u=>'<option>'+u.name+'</option>').join('');
+}
+
+async function loadAll(){
+  document.getElementById('loading').style.display='flex';
+  document.getElementById('loading-txt').textContent='טוען נתונים...';
+  try{
+    const[t,e,ce]=await Promise.all([
+      db.get('tasks','select=*&is_email=eq.false&order=created_at.desc'),
+      db.get('tasks','select=*&is_email=eq.true&order=created_at.desc'),
+      db.get('cal_events','select=*&order=from_date.asc')
+    ]);
+    tasks=Array.isArray(t)?t:[];
+    const et=Array.isArray(e)?e:[];
+    // personal cards for current user
+    // Merge ALL tasks for current user into one kanban (regular + email)
+    pCards={todo:[],prog:[],done:[]};
+    const allMyTasks=[...tasks.filter(x=>x.owner===currentUser.name),...et.filter(x=>x.owner===currentUser.name)];
+    allMyTasks.forEach(x=>{const c=x.done?'done':x.status==='בביצוע'?'prog':'todo';pCards[c].push(x);});
+    eCards={todo:[],prog:[],done:[]};
+    if(Array.isArray(ce)){calEvs=ce.filter(e=>e.type!=='ev-vac');calVacs=ce.filter(e=>e.type==='ev-vac');}
+    document.getElementById('conn-txt').textContent='מחובר ✓';
+    updateStats();renderTasks();renderKan('personal-kan',pCards);renderKan('email-kan',eCards);renderSubNav(activeApp);renderUsers();
+  }catch(e){document.getElementById('loading-txt').textContent='שגיאה: '+e.message;}
+  document.getElementById('loading').style.display='none';
+}
+
+function updateStats(){
+  const cu=currentUser.name;
+  document.getElementById('stat-open').textContent=tasks.filter(t=>!t.done&&t.owner===cu).length;
+  document.getElementById('stat-emails').textContent=Object.values(eCards).flat().filter(c=>c.status==='חדש').length;
+  document.getElementById('stat-overdue').textContent=Object.values(eCards).flat().filter(c=>isOD(c)).length;
+  const u=notifs.filter(n=>!n.read).length;
+  document.getElementById('npip').style.display=u?'block':'none';
+  const pc=tasks.filter(t=>!t.done&&!t.accepted&&!t.is_email).length;
+  const el=document.getElementById('ptab-cnt');el.textContent=pc;el.style.display=pc?'inline':'none';
+}
+
+// ═══ TASKS TABLE ═══
+function getFiltered(){
+  let l=tasks.filter(t=>!t.done&&!t.is_email);
+  if(activeTab==='mine')l=l.filter(t=>t.owner===currentUser.name||t.creator===currentUser.name);
+  if(activeTab==='pending')l=l.filter(t=>!t.accepted);
+  if(filt.owner)l=l.filter(t=>t.owner===filt.owner);
+  if(filt.status)l=l.filter(t=>t.status===filt.status);
+  if(filt.prio){const mp={גבוהה:'high',בינונית:'med',נמוכה:'low'};l=l.filter(t=>t.prio===filt.prio||t.prio===mp[filt.prio]);}
+  if(filt.dept)l=l.filter(t=>t.dept===filt.dept);
+  if(filt.search)l=l.filter(t=>t.name&&t.name.includes(filt.search));
+  if(sortC)l.sort((a,b)=>{const av=a[sortC]||'',bv=b[sortC]||'';return av<bv?-sortD:av>bv?sortD:0;});
+  return l;
+}
+
+function renderTasks(){
+  const l=getFiltered(),tb=document.getElementById('task-tb');
+  if(!l.length){tb.innerHTML='<tr><td colspan="10"><div class="nr"><i class="ti ti-layout-board" style="font-size:28px;display:block;margin-bottom:8px;opacity:.3"></i>אין משימות להצגה</div></td></tr>';return;}
+  const gr={};l.forEach(t=>{if(!gr[t.dept])gr[t.dept]=[];gr[t.dept].push(t);});
+  let h='';const depts=Object.keys(gr);
+  depts.forEach((dept,di)=>{
+    const dcolor=DC[dept]||'#888';const dbg=DC_BG[dept]||'#f0f0f0';
+    h+='<tr class="gh"><td colspan="10"><div class="ghi">';
+    h+='<div class="gdot" style="background:'+dcolor+'"></div>';
+    h+='<span style="color:'+dcolor+'">'+dept+'</span>';
+    h+='<span class="gcnt">'+gr[dept].length+' משימות</span>';
+    h+='</div></td></tr>';
+    gr[dept].forEach((t,ti)=>{
+      const isLast=ti===gr[dept].length-1;
+      h+='<tr class="data-row'+(t.done?' done-r':'')+(t.is_email?' email-row':'')+(t.is_email&&isOD(t)?' overdue':'')+'">';
+      h+='<td class="sep" style="text-align:center">';
+      h+='<div class="done-cb'+(t.done?' checked':'')+'" onclick="toggleDone(\''+t.id+'\','+(!t.done)+')" title="'+(t.done?'שחזר':'סמן כהושלם')+'">'+(t.done?'<i class="ti ti-check" style="font-size:10px"></i>':'')+'</div>';
+      h+='</td>';
+      h+='<td class="sep" style="font-weight:600">'+(t.name||'')+((!t.accepted&&!t.done)?'<span style="width:7px;height:7px;border-radius:50%;background:var(--org);display:inline-block;margin-right:6px;vertical-align:middle" title="ממתין לאישור"></span>':'')+'</td>';
+      h+='<td class="sep"><div class="avr">'+av(t.creator,20)+'<span style="font-size:12px;color:var(--ts)">'+(t.creator||'').split(' ')[0]+'</span></div></td>';
+      h+='<td class="sep"><div class="avr">'+av(t.owner,20)+'<span style="font-size:12px">'+(t.owner||'').split(' ')[0]+'</span></div></td>';
+      h+='<td class="sep"><span class="dept-tag" style="background:'+dbg+';color:'+dcolor+'">'+dept+'</span></td>';
+      h+='<td class="sep">'+sb(t.status)+'</td>';
+      h+='<td class="sep">'+pb(t.prio)+'</td>';
+      h+='<td class="sep" style="font-size:12px;color:var(--ts)">'+fd(t.due_date)+'</td>';
+      h+='<td class="sep">'+(t.accepted?'<span class="acctag"><i class="ti ti-circle-check" style="font-size:12px;color:var(--green)"></i>התקבל '+(t.accepted_at||'')+'</span>':'<span class="accept-b" onclick="acceptTask(\''+t.id+'\')"><i class="ti ti-hand-stop" style="font-size:11px"></i>קיבלתי</span>')+'</td>';
+      const canEdit=currentUser.role==='admin'||t.owner===currentUser.name||t.creator===currentUser.name;
+      h+='<td><div class="row-task-actions" style="display:flex;align-items:center;gap:3px;opacity:0;transition:opacity .15s">';
+      h+='<span class="chatb" onclick="openChat(\''+t.id+'\',\''+t.name.replace(/\'/g,"\\\'")+'\')" title="צאט" style="position:relative"><i class="ti ti-message-circle"></i>'+(t.msgs_count?'<span class="mcnt">'+t.msgs_count+'</span>':'')+'</span>';
+      if(canEdit)h+='<span onclick="openEditTask(\''+t.id+'\')" title="ערוך" style="cursor:pointer;color:var(--ts);font-size:15px;padding:2px 5px;border-radius:5px" onmouseover="this.style.background=\'var(--bluebg)\';this.style.color=\'var(--blue)\'" onmouseout="this.style.background=\'\';this.style.color=\'var(--ts)\'"><i class="ti ti-edit"></i></span>';
+      if(canEdit)h+='<span onclick="confirmDeleteTask(\''+t.id+'\',\''+t.name.replace(/\'/g,"\\\'")+'\')" title="מחק" style="cursor:pointer;color:var(--ts);font-size:15px;padding:2px 5px;border-radius:5px" onmouseover="this.style.background=\'var(--redbg)\';this.style.color=\'var(--red)\'" onmouseout="this.style.background=\'\';this.style.color=\'var(--ts)\'"><i class="ti ti-trash"></i></span>';
+      h+='</div></td>';
+      h+='</tr>';
+    });
+    // separator between departments (except last)
+    if(di<depts.length-1){
+      h+='<tr><td colspan="10" style="height:8px;background:var(--bg);border:none;border-top:2px solid var(--border)"></td></tr>';
+    }
+    h+='<tr class="add-r"><td></td><td colspan="9"><div class="add-r-i" onclick="openM(\'task\')"><i class="ti ti-plus" style="font-size:13px"></i>הוסף משימה ל'+dept+'</div></td></tr>';
+  });
+  tb.innerHTML=h;
+}
+
+async function toggleDone(id,done){
+  await db.patch('tasks',{done:done,status:done?'הושלם':'חדש'},'id=eq.'+id);
+  addNotif(done?'משימה הושלמה ✓':'משימה שוחזרה');
+  await loadAll();
+}
+async function acceptTask(id){
+  const n=new Date();const at=String(n.getDate()).padStart(2,'0')+'/'+String(n.getMonth()+1).padStart(2,'0')+' '+String(n.getHours()).padStart(2,'0')+':'+String(n.getMinutes()).padStart(2,'0');
+  const acceptedT=tasks.find(x=>x.id===id);
+  await db.patch('tasks',{accepted:true,status:'בביצוע',accepted_at:at},'id=eq.'+id);
+  addNotif('✅ קיבלת משימה: '+(acceptedT?acceptedT.name:'')+' | '+at);
+  await loadAll();
+}
+function applyF(){
+  filt={owner:document.getElementById('f-owner').value,status:document.getElementById('f-status').value,prio:document.getElementById('f-prio').value,dept:document.getElementById('f-dept').value,search:document.getElementById('f-search').value.trim()};
+  const ac=Object.values(filt).filter(v=>v).length;
+  document.getElementById('f-reset').style.display=ac?'flex':'none';
+  document.getElementById('astrip').style.display=ac?'flex':'none';
+  const lbl={owner:'אחראי',status:'סטטוס',prio:'עדיפות',dept:'מחלקה',search:'חיפוש'};
+  document.getElementById('strip-chips').innerHTML=Object.entries(filt).filter(([,v])=>v).map(([k,v])=>'<span class="achip">'+lbl[k]+': '+v+'<i class="ti ti-x" onclick="clearF(\''+k+'\')"></i></span>').join('');
+  renderTasks();
+}
+function clearF(k){const m={owner:'f-owner',status:'f-status',prio:'f-prio',dept:'f-dept',search:'f-search'};document.getElementById(m[k]).value='';filt[k]='';applyF();}
+function resetF(){['f-owner','f-status','f-prio','f-dept'].forEach(id=>document.getElementById(id).value='');document.getElementById('f-search').value='';Object.keys(filt).forEach(k=>filt[k]='');applyF();}
+function sortT(col){sortD=sortC===col?-sortD:1;sortC=col;renderTasks();}
+function switchTab(el,tab){document.querySelectorAll('.tn-tab').forEach(t=>t.classList.remove('active'));el.classList.add('active');activeTab=tab;renderTasks();}
+
+// ═══ DONE / INBOX ═══
+function renderDone(){
+  const l=tasks.filter(t=>t.done&&!t.is_email);
+  document.getElementById('done-tb').innerHTML=l.length?l.map(t=>'<tr class="done-r"><td style="text-align:center"><div class="done-cb checked" onclick="toggleDone(\''+t.id+'\',false)" title="שחזר"><i class="ti ti-check" style="font-size:10px"></i></div></td><td>'+t.name+'</td><td><div class="avr">'+av(t.creator,18)+'<span style="font-size:12px;color:var(--ts)">'+(t.creator||'').split(' ')[0]+'</span></div></td><td><div class="avr">'+av(t.owner,18)+'<span style="font-size:12px">'+(t.owner||'').split(' ')[0]+'</span></div></td><td style="font-size:12px;color:var(--ts)">'+(t.dept||'')+'</td><td>'+pb(t.prio)+'</td><td style="font-size:12px;color:var(--ts)">'+fd(t.due_date)+'</td><td><span class="chatb" onclick="openChat(\''+t.id+'\',\''+t.name+'\')"><i class="ti ti-message-circle"></i></span></td></tr>').join(''):'<tr><td colspan="8"><div class="nr">אין משימות שהושלמו</div></td></tr>';
+}
+function renderInbox(){
+  const pend=tasks.filter(t=>!t.done&&!t.accepted&&!t.is_email);
+  if(!pend.length){document.getElementById('inbox-list').innerHTML='<div class="nr"><i class="ti ti-circle-check" style="font-size:32px;display:block;margin-bottom:8px;color:var(--green)"></i>אין משימות הממתינות לאישורך</div>';return;}
+  document.getElementById('inbox-list').innerHTML=pend.map(t=>'<div style="background:var(--white);border:1.5px solid var(--border);border-right:4px solid var(--blue);border-radius:10px;padding:14px 16px;margin-bottom:10px"><div style="font-size:13.5px;font-weight:700;color:var(--text);margin-bottom:8px">'+t.name+'</div><div style="display:flex;align-items:center;gap:10px;font-size:12px;color:var(--ts);margin-bottom:10px;flex-wrap:wrap"><div style="display:flex;align-items:center;gap:6px">'+av(t.creator,20)+'<span>'+t.creator+'</span></div><span>·</span><span>'+t.dept+'</span><span>·</span>'+pb(t.prio)+'</div><div style="display:flex;gap:8px"><button class="btn btn-g btn-xs" onclick="acceptTask(\''+t.id+'\')"><i class="ti ti-check" style="font-size:12px"></i>קיבלתי – בטיפול</button><button class="btn btn-s btn-xs" onclick="openChat(\''+t.id+'\',\''+t.name+'\')"><i class="ti ti-message-circle" style="font-size:12px"></i>שאל שאלה</button></div></div>').join('');
+}
+
+// ═══ KANBAN ═══
+function renderKan(cid,co){
+  const cols={todo:'לביצוע',prog:'בביצוע',done:'הושלם'};
+  document.getElementById(cid).innerHTML=Object.entries(cols).map(([col,label])=>{
+    const list=co[col]||[];
+    let h='<div class="kc" style="'+(col==='done'?'background:#ecfaf4;border-color:#c0e8d5':'')+'"><div class="kct">'+label+' <span style="font-size:10px;font-weight:700;background:'+(col==='done'?'#c0e8d5':col==='prog'?'var(--orgbg)':'var(--border)')+';color:'+(col==='done'?'#005c34':col==='prog'?'var(--orgd)':'var(--ts)')+';border-radius:8px;padding:1px 8px">'+list.length+'</span></div>';
+    h+='<div class="drop-zone" id="dz-'+cid+'-'+col+'" ondragover="onDO(event,\''+cid+'\',\''+col+'\')" ondragleave="onDL(event,\''+cid+'\',\''+col+'\')" ondrop="onDrop(event,\''+cid+'\',\''+col+'\')">';
+    list.forEach((c,i)=>{
+      const p=PM[c.prio]||PM.med;const over=isOD(c);
+      const r=i===0?'color:#e03355;font-weight:700':i===1?'color:#f0921e;font-weight:700':'color:var(--tx)';
+      h+='<div class="kcard'+(c.is_email?' is-email':'')+(over?' overdue':'')+'" id="kc-'+c.id+'" draggable="true"'
+        +' ondragstart="onDS(event,\''+c.id+'\',\''+cid+'\',\''+col+'\')"'
+        +' ondragend="onDE(event)" onclick="openCardDetail(\''+c.id+'\')">';
+      h+='<i class="ti ti-grip-vertical drag-h"></i>';
+      h+='<div class="kcard-rank" style="'+r+'">#'+(i+1)+'</div>';
+      h+='<div class="kcard-t" style="'+(over?'color:var(--red)':'')+'">'+(c.is_email?'<i class="ti ti-mail" style="font-size:11px;color:'+(over?'var(--red)':'var(--blue)')+'"></i> ':'')+(c.name||'')+'</div>';
+      if(c.is_email)h+='<div class="email-info"><i class="ti ti-send" style="font-size:10px"></i>אל: '+(c.email_to||'').split('@')[0]+' · '+(dA(c.sent_date||c.created_at)===0?'היום':dA(c.sent_date||c.created_at)+' ימים')+'</div>';
+      if(over)h+='<div style="font-size:10px;color:var(--red);font-weight:700;margin-bottom:5px">⚠ '+dA(c.sent_date||c.created_at)+' ימים ללא מענה!</div>';
+      h+='<div class="kcard-foot"><div class="kcard-left"><span class="b '+(c.status==='חדש'?'b-new':c.status==='בביצוע'?'b-prog':'b-done')+'">'+c.status+'</span><span class="prio-pill" style="background:'+p.bg+';color:'+p.c+'"><span style="width:5px;height:5px;border-radius:50%;background:'+p.c+';display:inline-block"></span>'+p.l+'</span></div>'+(c.due_date?'<span class="due-t"><i class="ti ti-calendar" style="font-size:10px"></i>'+fd(c.due_date)+'</span>':'')+'</div>';
+      h+='</div>';
+    });
+    h+='</div>';
+    if(col!=='done')h+='<div class="add-kcard" onclick="openM(\'ptask\')"><i class="ti ti-plus" style="font-size:13px"></i>הוסף משימה</div>';
+    h+='</div>';
+    return h;
+  }).join('');
+}
+
+// DRAG
+let dId=null,dSrc=null,dCol=null;
+function onDS(e,id,src,col){dId=id;dSrc=src;dCol=col;setTimeout(()=>{const el=document.getElementById('kc-'+id);if(el)el.classList.add('dragging');},0);const ph=document.createElement('div');ph.className='kcard drag-ph';ph.id='dp';e.currentTarget.after(ph);}
+function onDE(e){e.currentTarget.classList.remove('dragging');document.querySelectorAll('.drop-zone').forEach(z=>z.classList.remove('drag-over'));const ph=document.getElementById('dp');if(ph)ph.remove();}
+function onDO(e,k,c){e.preventDefault();const dz=document.getElementById('dz-'+k+'-'+c);dz.classList.add('drag-over');const a=getAfter(dz,e.clientY);const ph=document.getElementById('dp');if(ph){if(a)dz.insertBefore(ph,a);else dz.appendChild(ph);}}
+function onDL(e,k,c){const dz=document.getElementById('dz-'+k+'-'+c);if(!dz.contains(e.relatedTarget))dz.classList.remove('drag-over');}
+async function onDrop(e,k,c){e.preventDefault();if(!dId)return;document.getElementById('dz-'+k+'-'+c).classList.remove('drag-over');const sm={todo:'חדש',prog:'בביצוע',done:'הושלם'};await db.patch('tasks',{status:sm[c],done:c==='done'},'id=eq.'+dId);await loadAll();dId=null;}
+function getAfter(c,y){return Array.from(c.querySelectorAll('.kcard:not(.dragging):not(.drag-ph)')).reduce((r,el)=>{const b=el.getBoundingClientRect(),o=y-(b.top+b.height/2);if(o<0&&o>r.offset)return{offset:o,element:el};return r;},{offset:Number.NEGATIVE_INFINITY}).element||null;}
+
+function openCardDetail(id){
+  const all=[...tasks,...Object.values(pCards).flat(),...Object.values(eCards).flat()];
+  const c=all.find(x=>x.id===id);if(!c)return;
+  const p=PM[c.prio]||PM.med;const over=isOD(c);const days=c.is_email?dA(c.sent_date||c.created_at):0;
+  document.getElementById('m-title').textContent=c.is_email?'📧 פרטי משימת מייל':'📋 פרטי משימה';
+  let html='';
+  if(over)html+='<div style="background:var(--redbg);border:1px solid #ffb8c8;border-radius:9px;padding:11px 14px;margin-bottom:13px;display:flex;align-items:center;gap:9px"><i class="ti ti-alert-triangle" style="font-size:18px;color:var(--red)"></i><div><div style="font-size:13px;font-weight:700;color:var(--redd)">'+days+' ימים ללא מענה!</div><div style="font-size:11px;color:var(--redd);margin-top:2px">סמן "בטיפול" כדי לנקות את האזהרה</div></div></div>';
+  html+='<div style="font-size:15px;font-weight:700;color:'+(over?'var(--red)':'var(--text)')+';margin-bottom:12px;line-height:1.3">'+(c.is_email?'<i class="ti ti-mail" style="font-size:14px;color:var(--blue);margin-left:6px"></i>':'')+c.name+'</div>';
+  if(c.is_email)html+='<div style="background:var(--bluebg);border:1px solid #b0d0ff;border-radius:8px;padding:11px 14px;margin-bottom:13px"><div style="font-size:11px;font-weight:700;color:var(--blued);margin-bottom:6px;text-transform:uppercase;letter-spacing:.3px">פרטי המייל המקורי</div><div style="font-size:12.5px;color:var(--text)">אל: '+(c.email_to||'')+'</div><div style="font-size:12px;color:var(--ts);margin-top:3px">נשלח: '+(c.sent_date||'')+' (לפני '+days+(days===1?' יום':' ימים')+')</div></div>';
+  html+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:14px"><div style="background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px 12px"><div style="color:var(--ts);font-size:10.5px;margin-bottom:4px;font-weight:600;text-transform:uppercase">סטטוס</div>'+sb(c.status)+'</div><div style="background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px 12px"><div style="color:var(--ts);font-size:10.5px;margin-bottom:4px;font-weight:600;text-transform:uppercase">עדיפות</div><div style="color:'+p.c+';font-weight:700">'+p.l+'</div></div></div>';
+  if(c.status!=='הושלם'){
+    html+='<div style="font-size:12px;color:var(--ts);font-weight:600;margin-bottom:8px;text-transform:uppercase;letter-spacing:.3px">שנה סטטוס:</div>';
+    html+='<div style="display:flex;gap:8px;flex-wrap:wrap">';
+    if(c.status!=='בביצוע')html+='<button class="btn btn-p btn-xs" onclick="changeStatus(\''+c.id+'\',\'בביצוע\')"><i class="ti ti-player-play" style="font-size:12px"></i>בטיפול</button>';
+    html+='<button class="btn btn-xs" style="background:var(--greenbg);color:var(--greend);border:1.5px solid #a0d8be;font-weight:600" onclick="changeStatus(\''+c.id+'\',\'הושלם\')"><i class="ti ti-check" style="font-size:12px"></i>הושלם</button>';
+    if(c.status!=='תקוע')html+='<button class="btn btn-xs" style="background:var(--redbg);color:var(--redd);border:1px solid #ffb8c8;font-weight:600" onclick="changeStatus(\''+c.id+'\',\'תקוע\')"><i class="ti ti-alert-circle" style="font-size:12px"></i>תקוע</button>';
+    html+='</div>';
+  }
+  document.getElementById('m-body').innerHTML=html;
+  document.getElementById('m-foot').innerHTML='<button class="btn btn-s" onclick="openChat(\''+c.id+'\',\''+c.name.replace(/'/g,"\\'")+'\')" style="margin-left:auto"><i class="ti ti-message-circle"></i>פתח צ׳אט</button><button class="btn btn-s" onclick="closeM()">סגור</button>';
+  document.getElementById('mbg').classList.add('on');
+}
+async function changeStatus(id,s){await db.patch('tasks',{status:s,done:s==='הושלם'},'id=eq.'+id);closeM();await loadAll();}
+
+// ═══ CHAT ═══
+function openChat(taskId,taskName){
+  chatTaskId=taskId;
+  document.getElementById('chat-task-name').textContent=taskName;
+  if(!chatMsgs[taskId])chatMsgs[taskId]=[
+    {name:'יוסי אלקון',time:'08:30',text:'אנא עדכן סטטוס',mine:currentUser.name==='יוסי אלקון'},
+    {name:'דנה כהן',time:'09:15',text:'בטיפול, אחזור עם עדכון',mine:currentUser.name==='דנה כהן'},
+  ];
+  renderChatMsgs();
+  document.getElementById('chat-overlay').classList.add('on');
+  closeM();
+}
+function renderChatMsgs(){
+  chatUnread[chatTaskId]=0;updateChatBadges();
+  const msgs=chatMsgs[chatTaskId]||[];
+  document.getElementById('chat-msgs').innerHTML=msgs.map(m=>{
+    const user=USERS.find(x=>x.name===m.name)||{initials:m.name[0],color:'#888'};
+    return'<div class="chat-msg'+(m.mine?' mine':'')+'"><div class="chat-msg-header"><div class="av" style="width:22px;height:22px;font-size:9px;background:'+user.color+'">'+user.initials+'</div><div class="chat-msg-name">'+m.name+'</div><div class="chat-msg-time">'+m.time+'</div></div><div class="chat-msg-body">'+m.text+'</div></div>';
+  }).join('');
+  const el=document.getElementById('chat-msgs');el.scrollTop=el.scrollHeight;
+}
+function sendChatMsg(){
+  const inp=document.getElementById('chat-input');const txt=inp.value.trim();if(!txt)return;
+  if(!chatMsgs[chatTaskId])chatMsgs[chatTaskId]=[];
+  const n=new Date();const t=String(n.getHours()).padStart(2,'0')+':'+String(n.getMinutes()).padStart(2,'0');
+  chatMsgs[chatTaskId].push({name:currentUser.name,time:t,text:txt,mine:true});
+  // notify others
+  addNotif('הודעה חדשה בצאט: '+document.getElementById('chat-task-name').textContent);
+  // mark other tasks as having unread
+  inp.value='';renderChatMsgs();
+}
+function updateChatBadges(){
+  document.querySelectorAll('.chatb').forEach(el=>{
+    const tid=el.getAttribute('data-tid');
+    const cnt=chatUnread[tid]||0;
+    const badge=el.querySelector('.unread-dot');
+    if(cnt>0){if(!badge){const d=document.createElement('span');d.className='unread-dot';d.textContent=cnt;el.appendChild(d);}}
+    else{if(badge)badge.remove();}
+  });
+}
+function closeChat(){document.getElementById('chat-overlay').classList.remove('on');chatTaskId=null;}
+function closeChatIf(e){if(e.target===document.getElementById('chat-overlay'))closeChat();}
+
+// ═══ CALENDAR ═══
+const pk=(y,m,d)=>y+'-'+m+'-'+d;
+const parseK=k=>{const p=k.split('-');return{y:+p[0],m:+p[1],d:+p[2]};};
+const inR=(key,from,to)=>{const{y,m,d}=parseK(key);const dt=new Date(y,m-1,d);const pn=s=>s.replace(/-0(\d)/g,'-$1');const f=parseK(pn(from)),t=parseK(pn(to));return dt>=new Date(f.y,f.m-1,f.d)&&dt<=new Date(t.y,t.m-1,t.d);};
+function getDayEvs(key){
+  const evs=[];
+  // DB events
+  calEvs.forEach(e=>{if(!inR(key,e.from_date,e.to_date))return;if(calFD.type&&e.type!==calFD.type)return;evs.push(Object.assign({},e,{kind:'event'}));});
+  calVacs.forEach(v=>{if(!inR(key,v.from_date,v.to_date))return;if(calFD.dept&&v.dept!==calFD.dept)return;evs.push(Object.assign({},v,{kind:'vacation',type:'ev-vac',title:'חופש: '+(v.emp||'').split(' ')[0]}));});
+  // Static holidays – filter by active country filter
+  const showIL=!calFD.country||calFD.country==='il';
+  const showCN=!calFD.country||calFD.country==='cn';
+  const showUS=!calFD.country||calFD.country==='us';
+  const showEU=!calFD.country||calFD.country==='eu';
+  STATIC_HOLIDAYS.forEach(h=>{
+    if(!inR(key,h.from_date,h.to_date))return;
+    if(calFD.type&&calFD.type!=='ev-hol'&&calFD.type!==h.type)return;
+    // Filter by country based on flag in title
+    const isIL=h.title.startsWith('🇮🇱');
+    const isCN=h.title.startsWith('🇨🇳');
+    const isUS=h.title.startsWith('🇺🇸');
+    const isEU=h.title.startsWith('🇪🇺');
+    if(isIL&&!showIL)return;
+    if(isCN&&!showCN)return;
+    if(isUS&&!showUS)return;
+    if(isEU&&!showEU)return;
+    evs.push(Object.assign({},h,{kind:'holiday'}));
+  });
+  return evs;
+}
+function renderCal(){
+  document.getElementById('cal-title').textContent=HM[calMo]+' '+calY;
+  const grid=document.getElementById('cal-grid');const first=new Date(calY,calMo,1).getDay(),days=new Date(calY,calMo+1,0).getDate();
+  let h='';
+  for(let i=0;i<first;i++){const pd=new Date(calY,calMo,1-first+i);h+='<div class="dc om"><div class="dnum">'+pd.getDate()+'</div></div>';}
+  for(let d=1;d<=days;d++){const key=pk(calY,calMo+1,d),evs=getDayEvs(key),isT=key===TK,isSel=selDay===key;h+='<div class="dc'+(isT?' today':'')+(isSel?' sel':'')+'" onclick="selCalDay(\''+key+'\')"><div class="dnum">'+d+'</div>'+evs.slice(0,3).map(e=>'<span class="ec '+e.type+'">'+e.title+'</span>').join('')+(evs.length>3?'<span style="font-size:9px;color:var(--blue)">+' +(evs.length-3)+'</span>':'')+'</div>';}
+  grid.innerHTML=h;
+}
+function selCalDay(key){
+  selDay=key;
+  const{y,m,d}=parseK(key);
+  const dt=new Date(y,m-1,d);
+  const dayNames=['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'];
+  const monthNames=['ינואר','פברואר','מרץ','אפריל','מאי','יוני','יולי','אוגוסט','ספטמבר','אוקטובר','נובמבר','דצמבר'];
+  document.getElementById('sum-day-title').textContent=dayNames[dt.getDay()]+', '+d+' '+monthNames[m-1]+' '+y;
+  const evs=getDayEvs(key);
+  const vacs=evs.filter(e=>e.kind==='vacation');
+  const hols=evs.filter(e=>e.kind==='holiday'||e.type==='ev-hol');
+  const ce=evs.filter(e=>e.kind==='event'&&e.type!=='ev-hol'&&e.kind!=='holiday');
+  const isAdmin=currentUser&&currentUser.role==='admin';
+
+  let vacsHtml=vacs.length?vacs.map(v=>{
+    const delBtn=isAdmin?'<span style="cursor:pointer;color:var(--tx);font-size:13px" onclick="deleteCalEvent(\''+v.id+'\')" title="מחק"><i class="ti ti-x"></i></span>':'';
+    return '<div class="di" style="justify-content:space-between"><div style="display:flex;align-items:center;gap:5px">'+av(v.emp,18)+(v.emp||'')+'</div>'+delBtn+'</div>';
+  }).join(''):'<div class="de">אין</div>';
+
+  let eventsHtml=ce.length?ce.map(e=>{
+    const delBtn=isAdmin?'<span style="cursor:pointer;color:var(--tx);font-size:13px" onclick="deleteCalEvent(\''+e.id+'\')" title="מחק"><i class="ti ti-x"></i></span>':'';
+    return '<div class="di" style="justify-content:space-between"><span class="ec '+e.type+'">'+e.title+'</span>'+delBtn+'</div>';
+  }).join(''):'<div class="de">אין</div>';
+
+  let holsHtml=hols.length?hols.map(e=>{
+    const delBtn=(isAdmin&&e.kind!=='holiday')?'<span style="cursor:pointer;color:var(--tx);font-size:13px" onclick="deleteCalEvent(\''+e.id+'\')" title="מחק"><i class="ti ti-x"></i></span>':'';
+    return '<div class="di" style="justify-content:space-between"><span class="ec ev-hol">'+e.title+'</span>'+delBtn+'</div>';
+  }).join(''):'<div class="de">אין</div>';
+
+  const countryBtns=[
+    {k:'il',flag:'🇮🇱',bg:'#fde9ed',c:'#8b0022'},
+    {k:'cn',flag:'🇨🇳',bg:'#ffe0e0',c:'#b00000'},
+    {k:'us',flag:'🇺🇸',bg:'#e8f0ff',c:'#003080'},
+    {k:'eu',flag:'🇪🇺',bg:'#e8f5e9',c:'#1b5e20'},
+    {k:'',flag:'הכל',bg:'var(--bluebg)',c:'var(--blued)'}
+  ].map(b=>'<span style="cursor:pointer;padding:1px 6px;border-radius:8px;background:'+(calFD.country===b.k?b.bg:'var(--bg)')+';color:'+(calFD.country===b.k?b.c:'var(--ts)')+';" onclick="setCountryFilter(\''+b.k+'\')">'+b.flag+'</span>').join('');
+
+  document.getElementById('dsp-grid').innerHTML=
+    '<div class="dsec"><div class="dsec-t">חופשות</div>'+vacsHtml+'</div>'+
+    
+    '<div class="dsec"><div class="dsec-t">אירועים</div>'+eventsHtml+'</div>'+
+    '<div class="dsec" style="grid-column:1/-1"><div class="dsec-t" style="display:flex;align-items:center;justify-content:space-between">חגים ומועדים<div style="display:flex;gap:4px;font-size:10px">'+countryBtns+'</div></div>'+holsHtml+'</div>';
+
+  renderCal();
+}
+
+async function deleteCalEvent(id){
+  await db.del('cal_events','id=eq.'+id);
+  addNotif('אירוע נמחק');
+  const ce=await db.get('cal_events','select=*');
+  if(Array.isArray(ce)){calEvs=ce.filter(e=>e.type!=='ev-vac');calVacs=ce.filter(e=>e.type==='ev-vac');}
+  renderCal();if(selDay)selCalDay(selDay);
+}
+function setCountryFilter(c){
+  calFD.country=c;
+  const el=document.getElementById('cf-country');if(el)el.value=c;
+  renderCal();if(selDay)selCalDay(selDay);
+}
+function setSumTab(t){
+  document.getElementById('st-day').classList.toggle('active',t==='day');
+  document.getElementById('st-week').classList.toggle('active',t==='week');
+  document.getElementById('sum-day').style.display=t==='day'?'block':'none';
+  document.getElementById('sum-week').style.display=t==='week'?'block':'none';
+  if(t==='week') renderWeeklySummary();
+}
+function renderWeeklySummary(){
+  const base=selDay?new Date(...selDay.split('-').map((v,i)=>i===1?v-1:+v)):new Date(calY,calMo,1);
+  const dow=base.getDay();
+  const sun=new Date(base);sun.setDate(base.getDate()-dow);
+  const dayHe=['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'];
+  let rows='';
+  for(let i=0;i<7;i++){
+    const d=new Date(sun);d.setDate(sun.getDate()+i);
+    const key=d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();
+    const evs=getDayEvs(key);
+    if(!evs.length)continue;
+    rows+='<div style="padding:6px 0;border-bottom:1px solid var(--borderl)"><div style="font-size:11px;font-weight:700;color:var(--ts);margin-bottom:4px">'+dayHe[i]+' '+d.getDate()+'/'+(d.getMonth()+1)+'</div>';
+    evs.forEach(e=>rows+='<div style="display:flex;align-items:center;gap:6px;margin-bottom:2px"><span class="ec '+e.type+'" style="font-size:10px">'+e.title+'</span></div>');
+    rows+='</div>';
+  }
+  document.getElementById('ws-body').innerHTML=rows||'<div style="color:var(--tx);font-size:12px">אין אירועים בשבוע זה</div>';
+}
+function applyCalF(){calFD={dept:document.getElementById('cf-dept').value,type:document.getElementById('cf-type').value,country:(document.getElementById('cf-country')||{value:''}).value};renderCal();if(selDay)selCalDay(selDay);}
+function prevM(){calMo--;if(calMo<0){calMo=11;calY--;}renderCal();}
+function nextM(){calMo++;if(calMo>11){calMo=0;calY++;}renderCal();}
+function goToday(){calY=TODAY.getFullYear();calMo=TODAY.getMonth();renderCal();selCalDay(TK);}
+
+// ═══ USERS PAGE ═══
+function renderUsers(){
+  const q=(document.getElementById('u-search')||{value:''}).value.toLowerCase();
+  const rf=(document.getElementById('u-filter-role')||{value:''}).value;
+  const df=(document.getElementById('u-filter-dept')||{value:''}).value;
+  let list=USERS.filter(u=>{
+    if(q&&!u.name.toLowerCase().includes(q)&&!u.username.includes(q))return false;
+    if(rf&&u.role!==rf)return false;
+    if(df&&u.dept!==df)return false;
+    return true;
+  });
+  const roles={admin:'מנהל ראשי',manager:'מנהל מחלקה',user:'משתמש'};
+  const rcls={admin:'role-admin',manager:'role-manager',user:'role-user'};
+  // stats
+  if(document.getElementById('users-stats')){
+    document.getElementById('users-stats').innerHTML=[
+      {lbl:'סה"כ משתמשים',val:USERS.length,c:'var(--blue)'},
+      {lbl:'פעילים',val:USERS.filter(u=>u.active).length,c:'var(--green)'},
+      {lbl:'מנהלים',val:USERS.filter(u=>u.role==='admin'||u.role==='manager').length,c:'var(--redd)'},
+      {lbl:'משתמשים',val:USERS.filter(u=>u.role==='user').length,c:'var(--ts)'},
+    ].map(s=>'<div class="ustat"><div class="ustat-lbl">'+s.lbl+'</div><div class="ustat-val" style="color:'+s.c+'">'+s.val+'</div></div>').join('');
+  }
+  if(!document.getElementById('users-tbody'))return;
+  document.getElementById('users-tbody').innerHTML=list.map(u=>`
+    <tr>
+      <td style="text-align:center"><div class="av" style="width:30px;height:30px;font-size:11px;background:${u.color};margin:0 auto">${u.initials}</div></td>
+      <td><div style="font-size:13px;font-weight:600;color:var(--text)">${u.name}</div></td>
+      <td><code style="font-size:12px;background:var(--bg);padding:2px 8px;border-radius:4px;color:var(--text)">${u.username}</code></td>
+      <td style="font-size:12px;color:var(--ts)">${u.email||u.username+'@elcon.co.il'}</td>
+      <td><span class="dept-tag" style="background:${DC_BG[u.dept]||'#f0f0f0'};color:${DC[u.dept]||'#888'}">${u.dept}</span></td>
+      <td><span class="role-badge ${rcls[u.role]}"><i class="ti ${u.role==='admin'?'ti-shield':u.role==='manager'?'ti-users':'ti-user'}" style="font-size:11px"></i>${roles[u.role]}</span></td>
+      <td><div style="display:flex;align-items:center;gap:6px;cursor:pointer" onclick="toggleUserStatus('${u.id}')"><div class="status-dot" style="background:${u.active?'var(--green)':'var(--tx)'}"></div><span style="font-size:12px;color:var(--ts)">${u.active?'פעיל':'מושהה'}</span></div></td>
+      <td><div class="row-actions"><button class="act-btn" onclick="openEditUser('${u.id}')" title="ערוך"><i class="ti ti-edit"></i></button>${u.role!=='admin'?'<button class="act-btn danger" onclick="confirmDeleteUser(\''+u.id+'\')" title="מחק"><i class="ti ti-trash"></i></button>':''}</div></td>
+    </tr>`).join('');
+}
+function toggleUserStatus(id){const u=USERS.find(x=>x.id===id);if(u&&u.role!=='admin'){u.active=!u.active;saveUsers();renderQuickUsers();}renderUsers();}
+function openEditUser(id){
+  const u=USERS.find(x=>x.id===id);if(!u)return;
+  const roles={admin:'מנהל ראשי',manager:'מנהל מחלקה',user:'משתמש'};
+  document.getElementById('m-title').textContent='ערוך משתמש – '+u.name;
+  document.getElementById('m-body').innerHTML=`
+    <div class="fld-row">
+      <div class="fld"><div class="fld-l">שם פרטי</div><input id="eu-fn" value="${u.name.split(' ')[0]}"/></div>
+      <div class="fld"><div class="fld-l">שם משפחה</div><input id="eu-ln" value="${u.name.split(' ').slice(1).join(' ')}"/></div>
+    </div>
+    <div class="fld"><div class="fld-l">שם כניסה (username)</div><input id="eu-user" value="${u.username}" placeholder="israel.i"/></div>
+    <div class="fld"><div class="fld-l">מייל (Microsoft 365)</div><input id="eu-email" type="email" value="${u.email||''}" placeholder="israel@elcon.co.il"/></div>
+    <div class="fld-row">
+      <div class="fld"><div class="fld-l">מחלקה</div><select id="eu-dept"><option ${u.dept==='הנהלה'?'selected':''}>הנהלה</option><option ${u.dept==='מכירות'?'selected':''}>מכירות</option><option ${u.dept==='שירות'?'selected':''}>שירות</option><option ${u.dept==='תפעול'?'selected':''}>תפעול</option><option ${u.dept==='ייצור'?'selected':''}>ייצור</option></select></div>
+      <div class="fld"><div class="fld-l">תפקיד</div><select id="eu-role"><option value="admin" ${u.role==='admin'?'selected':''}>מנהל ראשי</option><option value="manager" ${u.role==='manager'?'selected':''}>מנהל מחלקה</option><option value="user" ${u.role==='user'?'selected':''}>משתמש</option></select></div>
+    </div>
+    <div class="fld"><div class="fld-l">סיסמא חדשה <span style="font-weight:400;color:var(--tx)">(השאר ריק לאי-שינוי)</span></div><div class="pass-wrap"><input type="password" id="eu-pass" placeholder="••••••••"/><i class="ti ti-eye pass-eye" onclick="this.previousElementSibling.type=this.previousElementSibling.type==='password'?'text':'password'"></i></div></div>`;
+  document.getElementById('m-foot').innerHTML='<button class="btn btn-s" onclick="closeM()">ביטול</button><button class="btn btn-p" onclick="saveEditUser(\''+id+'\')">שמור</button>';
+  document.getElementById('mbg').classList.add('on');
+}
+function saveEditUser(id){
+  const u=USERS.find(x=>x.id===id);if(!u)return;
+  const fn=document.getElementById('eu-fn').value.trim();
+  const ln=document.getElementById('eu-ln').value.trim();
+  if(fn)u.name=fn+(ln?' '+ln:'');
+  const usr=document.getElementById('eu-user').value.trim();
+  if(usr)u.username=usr;
+  const em=document.getElementById('eu-email').value.trim();
+  if(em)u.email=em;
+  u.dept=document.getElementById('eu-dept').value;
+  u.role=document.getElementById('eu-role').value;
+  const np=document.getElementById('eu-pass').value;
+  if(np)u.password=np;
+  saveUsers();closeM();renderUsers();renderQuickUsers();addNotif('משתמש עודכן: '+u.name);
+}
+function confirmDeleteUser(id){
+  const u=USERS.find(x=>x.id===id);if(!u)return;
+  document.getElementById('m-title').textContent='מחיקת משתמש';
+  document.getElementById('m-body').innerHTML='<div style="text-align:center;padding:16px 0"><div style="font-size:36px;margin-bottom:12px">⚠️</div><div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:8px">האם למחוק את "'+u.name+'"?</div><div style="font-size:12.5px;color:var(--ts)">פעולה זו אינה ניתנת לביטול.</div></div>';
+  document.getElementById('m-foot').innerHTML='<button class="btn btn-s" onclick="closeM()">ביטול</button><button class="btn btn-r" onclick="deleteUser(\''+id+'\')"><i class="ti ti-trash" style="font-size:13px"></i>מחק</button>';
+  document.getElementById('mbg').classList.add('on');
+}
+function deleteUser(id){const idx=USERS.findIndex(x=>x.id===id);if(idx>-1)USERS.splice(idx,1);saveUsers();closeM();renderUsers();renderQuickUsers();}
+
+// ═══ AUTO ═══
+function openEditTask(id){
+  const t=tasks.find(x=>x.id===id);if(!t)return;
+  const pLabel={high:'גבוהה',med:'בינונית',low:'נמוכה'};
+  document.getElementById('m-title').textContent='עריכת משימה';
+  document.getElementById('m-body').innerHTML=`
+    <div class="fld"><div class="fld-l">שם המשימה</div><input id="et-name" value="${(t.name||'').replace(/"/g,'&quot;')}"/></div>
+    <div class="fld-row">
+      <div class="fld"><div class="fld-l">מחלקה</div><select id="et-dept">
+        <option ${t.dept==='הנהלה'?'selected':''}>הנהלה</option>
+        <option ${t.dept==='מכירות'?'selected':''}>מכירות</option>
+        <option ${t.dept==='שירות'?'selected':''}>שירות</option>
+        <option ${t.dept==='תפעול'?'selected':''}>תפעול</option>
+        <option ${t.dept==='ייצור'?'selected':''}>ייצור</option>
+      </select></div>
+      <div class="fld"><div class="fld-l">סטאטוס</div><select id="et-status">
+        <option ${t.status==='חדש'?'selected':''}>חדש</option>
+        <option ${t.status==='ממתין לאישור'?'selected':''}>ממתין לאישור</option>
+        <option ${t.status==='בביצוע'?'selected':''}>בביצוע</option>
+        <option ${t.status==='תקוע'?'selected':''}>תקוע</option>
+        <option ${t.status==='הושלם'?'selected':''}>הושלם</option>
+      </select></div>
+    </div>
+    <div class="fld-row">
+      <div class="fld"><div class="fld-l">עדיפות</div><select id="et-prio">
+        <option value="high" ${t.prio==='high'?'selected':''}>גבוהה</option>
+        <option value="med" ${t.prio==='med'||!t.prio?'selected':''}>בינונית</option>
+        <option value="low" ${t.prio==='low'?'selected':''}>נמוכה</option>
+      </select></div>
+      <div class="fld"><div class="fld-l">תאריך יעד</div><input type="date" id="et-due" value="${t.due_date||''}"/></div>
+    </div>
+    <div class="fld"><div class="fld-l">אחראי</div><select id="et-owner">
+      ${USERS.map(u=>'<option '+(t.owner===u.name?'selected':'')+'>'+u.name+'</option>').join('')}
+    </select></div>`;
+  document.getElementById('m-foot').innerHTML='<button class="btn btn-s" onclick="closeM()">ביטול</button><button class="btn btn-p" onclick="saveEditTask(\''+id+'\')">שמור</button>';
+  document.getElementById('mbg').classList.add('on');
+}
+async function saveEditTask(id){
+  const name=document.getElementById('et-name').value.trim();
+  if(!name)return;
+  const dept=document.getElementById('et-dept').value;
+  const status=document.getElementById('et-status').value;
+  const prio=document.getElementById('et-prio').value;
+  const due=document.getElementById('et-due').value||null;
+  const owner=document.getElementById('et-owner').value;
+  const done=status==='הושלם';
+  const accepted=status==='בביצוע'||status==='הושלם';
+  await db.patch('tasks',{name,dept,status,prio,due_date:due,owner,done,accepted},'id=eq.'+id);
+  closeM();addNotif('משימה עודכנה');await loadAll();
+}
+async function confirmDeleteTask(id,name){
+  document.getElementById('m-title').textContent='מחיקת משימה';
+  document.getElementById('m-body').innerHTML='<div style="text-align:center;padding:14px 0"><div style="font-size:34px;margin-bottom:10px">🗑️</div><div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:7px">האם למחוק את:</div><div style="font-size:13px;color:var(--ts);background:var(--bg);border-radius:8px;padding:8px 12px;margin:0 10px">"'+name+'"</div><div style="font-size:12px;color:var(--tx);margin-top:10px">פעולה זו אינה ניתנת לביטול</div></div>';
+  document.getElementById('m-foot').innerHTML='<button class="btn btn-s" onclick="closeM()">ביטול</button><button class="btn btn-r" onclick="deleteTask(\''+id+'\')"><i class="ti ti-trash" style="font-size:13px"></i>מחק</button>';
+  document.getElementById('mbg').classList.add('on');
+}
+async function deleteTask(id){
+  await db.del('tasks','id=eq.'+id);
+  closeM();addNotif('משימה נמחקה');await loadAll();
+}
+
+function renderAutos(){
+  document.getElementById('auto-list').innerHTML=[
+    {name:'התראה על אי-קבלת משימה',trigger:'משימה לא אושרה תוך 2 שעות',action:'שלח התראה',active:true},
+    {name:'מייל ללא מענה 3 ימים',trigger:'מייל ממתין מעל 3 ימים',action:'צבע אדום + שלח התראה',active:true}
+  ].map(a=>'<div style="background:var(--white);border:1.5px solid var(--border);border-radius:10px;padding:14px 16px;margin-bottom:10px"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px"><span style="font-size:13.5px;font-weight:700;color:var(--text)">'+a.name+'</span><div style="width:38px;height:22px;border-radius:11px;background:'+(a.active?'var(--green)':'#ccc')+';cursor:pointer;position:relative;transition:background .2s"><div style="width:16px;height:16px;border-radius:50%;background:#fff;position:absolute;top:3px;'+(a.active?'left:19px':'left:3px')+';transition:left .2s;box-shadow:0 1px 3px rgba(0,0,0,0.2)"></div></div></div><div style="font-size:12.5px;color:var(--ts);background:var(--bg);border-radius:7px;padding:10px 12px;line-height:1.8"><strong style="color:var(--text)">כאשר</strong> '+a.trigger+' <strong style="color:var(--text)">→ אז</strong> '+a.action+'</div></div>').join('');
+}
+
+// ═══ NAV ═══
+const SUB={
+  tasks:[{id:'tasks',icon:'ti-layout-board',lbl:'כל המשימות'},{id:'inbox',icon:'ti-inbox',lbl:'נכנסות',badge:true},{id:'done',icon:'ti-circle-check',lbl:'בוצע'},{d:true,lbl:'מחלקות'},{id:'dept-מכירות',dot:'#e44cc0',lbl:'מכירות'},{id:'dept-שירות',dot:'#0073ea',lbl:'שירות'},{id:'dept-תפעול',dot:'#f0921e',lbl:'תפעול'},{id:'dept-ייצור',dot:'#00c16e',lbl:'ייצור'},{d:true,lbl:'כלים'},{id:'auto',icon:'ti-bolt',lbl:'אוטומציות'}],
+  calendar:[{id:'calendar',icon:'ti-calendar',lbl:'לוח שנה חודשי'}],
+  personal:[{id:'personal',icon:'ti-user',lbl:'האזור שלי'},{d:true,lbl:'מקטעים'},{id:'_ptasks',icon:'ti-checkbox',lbl:'משימות',a:true},{id:'_pemail',icon:'ti-mail',lbl:'מיילים → משימות',a:true},{id:'_pnotes',icon:'ti-notes',lbl:'פתקים',a:true},{id:'_parchive',icon:'ti-folders',lbl:'ארכיון',a:true}],
+  users:[{id:'users',icon:'ti-users',lbl:'רשימת משתמשים'}]
+};
+function renderSubNav(app){
+  const items=SUB[app]||[];
+  const pc=tasks.filter(t=>!t.done&&!t.accepted&&!t.is_email).length;
+  let h='';
+  items.forEach(item=>{
+    if(item.d){h+='<div class="sb-lbl">'+item.lbl+'</div>';return;}
+    const isA=!item.a&&item.id===activePage;
+    const badge=item.badge&&pc?'<span class="si-badge">'+pc+'</span>':'';
+    const icon=item.icon?'<i class="ti '+item.icon+'"></i>':'';
+    const dot=item.dot?'<div class="si-dot" style="background:'+item.dot+'"></div>':'';
+    h+='<div class="si'+(isA?' active':'')+'" onclick="subNavClick(\''+item.id+'\',\''+app+'\')">'+(icon||dot)+item.lbl+badge+'</div>';
+  });
+  document.getElementById('sb-nav').innerHTML=h;
+}
+function subNavClick(id,app){
+  if(id.startsWith('_')){persNav(null,id.slice(1));return;}
+  if(id.startsWith('dept-')){document.getElementById('f-dept').value=id.replace('dept-','');filt.dept=id.replace('dept-','');showPage('tasks');applyF();}
+  else showPage(id);
+  renderSubNav(app);
+  setTimeout(()=>{document.querySelectorAll('#sb-nav .si').forEach(el=>{el.classList.remove('active');if(el.getAttribute('onclick')&&el.getAttribute('onclick').includes("'"+id+"'"))el.classList.add('active');});},0);
+}
+function switchApp(app,el){
+  activeApp=app;
+  document.querySelectorAll('.app-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  renderSubNav(app);
+  showPage({tasks:'tasks',calendar:'calendar',personal:'personal',users:'users'}[app]);
+}
+function showPage(pid){
+  activePage=pid;
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
+  const pg=document.getElementById('pg-'+pid);if(pg)pg.classList.add('on');
+  if(pid==='done')renderDone();
+  if(pid==='calendar')renderCal();
+  if(pid==='inbox')renderInbox();
+  if(pid==='auto')renderAutos();
+  const titles={tasks:'משימות',inbox:'נכנסות',done:'בוצע',calendar:'לו"ז חברה',personal:'האזור האישי',auto:'אוטומציות',users:'ניהול משתמשים'};
+  document.getElementById('pg-title').textContent=titles[pid]||pid;
+  document.getElementById('tn-tabs').style.display=(activeApp==='tasks'&&pid==='tasks')?'flex':'none';
+  document.getElementById('top-add-lbl').textContent={tasks:'משימה חדשה',calendar:'אירוע חדש',personal:'הוסף',auto:'חוק חדש',users:'משתמש חדש'}[pid]||'חדש';
+}
+function persNav(el,sec){
+  document.querySelectorAll('.pni').forEach(i=>i.classList.remove('active'));
+  if(el)el.classList.add('active');
+  else{const m={ptasks:0,pemail:1,pnotes:2,parchive:3};const all=document.querySelectorAll('.pni');if(all[m[sec]])all[m[sec]].classList.add('active');}
+  document.querySelectorAll('.pers-content').forEach(c=>c.classList.remove('on'));
+  const el2=document.getElementById('pc-'+sec);if(el2)el2.classList.add('on');
+  if(sec==='pnotes'){loadStickyNotes();setTimeout(renderStickyNotes,50);}
+}
+
+// ═══ NOTIFICATIONS ═══
+function addNotif(txt){notifs.unshift({text:txt,time:'עכשיו',read:false});renderNotifs();}
+function renderNotifs(){
+  const u=notifs.filter(n=>!n.read).length;document.getElementById('npip').style.display=u?'block':'none';
+  document.getElementById('notif-list').innerHTML=notifs.length?notifs.slice(0,10).map((n,i)=>'<div style="padding:11px 16px;border-bottom:1px solid var(--borderl);cursor:pointer;background:'+(n.read?'var(--white)':'#eef3ff')+'" onclick="markRead('+i+')"><div style="font-size:13px;color:var(--text);'+(n.read?'':'font-weight:600')+'">'+n.text+'</div><div style="font-size:11px;color:var(--tx);margin-top:2px">'+n.time+'</div></div>').join(''):'<div style="padding:24px;text-align:center;font-size:12.5px;color:var(--ts)">אין התראות</div>';
+}
+function markRead(i){notifs[i].read=true;renderNotifs();}
+function markAllRead(){notifs.forEach(n=>n.read=true);renderNotifs();}
+function toggleNotif(){document.getElementById('notif-panel').classList.toggle('on');renderNotifs();}
+document.addEventListener('click',e=>{const p=document.getElementById('notif-panel');if(p.classList.contains('on')&&!p.contains(e.target)&&!e.target.closest('.tn-icon'))p.classList.remove('on');});
+
+// ═══ MODALS ═══
+function openM(type){
+  const forms={
+    task:{title:'משימה חדשה',body:`<div class="fld"><div class="fld-l">שם המשימה</div><input id="nt-n" placeholder="תאר את המשימה..."/></div><div class="fld-row"><div class="fld"><div class="fld-l">יוצר</div><select id="nt-c">${USERS.map(u=>'<option'+(u.name===currentUser.name?' selected':'')+'>'+u.name+'</option>').join('')}</select></div><div class="fld"><div class="fld-l">אחראי</div><select id="nt-o">${USERS.map(u=>'<option>'+u.name+'</option>').join('')}</select></div></div><div class="fld-row"><div class="fld"><div class="fld-l">מחלקה</div><select id="nt-d"><option>מכירות</option><option>שירות</option><option>תפעול</option><option>ייצור</option></select></div><div class="fld"><div class="fld-l">עדיפות</div><select id="nt-p"><option value="high">גבוהה</option><option value="med" selected>בינונית</option><option value="low">נמוכה</option></select></div></div><div class="fld"><div class="fld-l">תאריך יעד</div><input type="date" id="nt-due"/></div>`,foot:'<button class="btn btn-s" onclick="closeM()">ביטול</button><button class="btn btn-p" onclick="saveTask()">צור משימה</button>'},
+    ptask:{title:'משימה אישית',body:'<div class="fld"><div class="fld-l">כותרת</div><input id="pt-t" placeholder="מה צריך לעשות?"/></div><div class="fld-row"><div class="fld"><div class="fld-l">תאריך יעד</div><input type="date" id="pt-d"/></div><div class="fld"><div class="fld-l">עדיפות</div><select id="pt-p"><option value="high">גבוהה</option><option value="med" selected>בינונית</option><option value="low">נמוכה</option></select></div></div>',foot:'<button class="btn btn-s" onclick="closeM()">ביטול</button><button class="btn btn-p" onclick="savePTask()">הוסף</button>'},
+    note:{title:'פתק חדש',body:'<div style="padding:10px 0;text-align:center;font-size:13px;color:var(--ts)">לחץ על "פתק חדש" בלוח הפתקים</div>',foot:'<button class="btn btn-s" onclick="closeM()">סגור</button>'},
+    event:{title:'אירוע חדש',body:'<div class="fld"><div class="fld-l">כותרת</div><input id="ev-t" placeholder="שם האירוע"/></div><div class="fld-row"><div class="fld"><div class="fld-l">סוג</div><select id="ev-type"><option value="ev-meet">פגישה</option><option value="ev-vac">חופשה</option><option value="ev-hol">חגים ומועדים</option></select></div><div class="fld"><div class="fld-l">תאריך</div><input type="date" id="ev-d"/></div></div>',foot:'<button class="btn btn-s" onclick="closeM()">ביטול</button><button class="btn btn-p" onclick="saveEvent()">הוסף</button>'},
+    vacation:{title:'בקשת חופשה',body:'<div class="fld"><div class="fld-l">עובד</div><select id="vac-e">'+USERS.map(u=>'<option>'+u.name+'</option>').join('')+'</select></div><div class="fld-row"><div class="fld"><div class="fld-l">מתאריך</div><input type="date" id="vac-f"/></div><div class="fld"><div class="fld-l">עד תאריך</div><input type="date" id="vac-t"/></div></div><div class="fld"><div class="fld-l">סוג</div><select id="vac-type"><option>חופשה שנתית</option><option>מחלה</option><option>מילואים</option></select></div>',foot:'<button class="btn btn-s" onclick="closeM()">ביטול</button><button class="btn btn-p" onclick="saveVacation()">שלח לאישור</button>'},
+    auto:{title:'חוק אוטומציה',body:'<div class="fld"><div class="fld-l">שם</div><input id="au-n" placeholder="שם החוק"/></div><div class="fld"><div class="fld-l">תנאי</div><select id="au-t"><option>משימה לא אושרה תוך 2 שעות</option><option>מייל ממתין מעל 3 ימים</option><option>תאריך יעד עבר</option></select></div><div class="fld"><div class="fld-l">פעולה</div><select id="au-a"><option>שלח התראה</option><option>שנה סטטוס לדחוף</option></select></div>',foot:'<button class="btn btn-s" onclick="closeM()">ביטול</button><button class="btn btn-p" onclick="closeM()">שמור</button>'},
+    upload:{title:'העלאת מסמך',body:'<div class="fld"><div class="fld-l">שם</div><input id="up-n" placeholder="שם המסמך"/></div><div class="fld"><div class="fld-l">קטגוריה</div><select id="up-c"><option>מכירות</option><option>כספים</option><option>משאבי אנוש</option><option>תפעול</option></select></div>',foot:'<button class="btn btn-s" onclick="closeM()">ביטול</button><button class="btn btn-p" onclick="closeM()">העלה</button>'},
+    'add-user':{title:'הוסף משתמש חדש',body:`<div class="info-box"><i class="ti ti-info-circle" style="font-size:15px;flex-shrink:0;margin-top:1px"></i><span>המשתמש יוכל להתחבר עם שם המשתמש והסיסמא. המייל ישמש לחיבור ל-Microsoft To Do.</span></div><div class="fld-row"><div class="fld"><div class="fld-l">שם פרטי</div><input id="nu-fn" placeholder="ישראל"/></div><div class="fld"><div class="fld-l">שם משפחה</div><input id="nu-ln" placeholder="ישראלי"/></div></div><div class="fld"><div class="fld-l">שם כניסה (username)</div><input id="nu-user" placeholder="israel.i"/></div><div class="fld"><div class="fld-l">מייל Microsoft 365</div><input type="email" id="nu-email" placeholder="israel@elcon.co.il"/></div><div class="fld"><div class="fld-l">סיסמא</div><div class="pass-wrap"><input type="password" id="nu-pass" placeholder="לפחות 6 תווים"/><i class="ti ti-eye pass-eye" onclick="this.previousElementSibling.type=this.previousElementSibling.type==='password'?'text':'password'"></i></div></div><div class="fld-row"><div class="fld"><div class="fld-l">מחלקה</div><select id="nu-dept"><option>הנהלה</option><option>הנהלה</option><option>מכירות</option><option>שירות</option><option>תפעול</option><option>ייצור</option></select></div><div class="fld"><div class="fld-l">תפקיד</div><select id="nu-role"><option value="admin">מנהל ראשי</option><option value="manager">מנהל מחלקה</option><option value="user" selected>משתמש</option></select></div></div>`,foot:'<button class="btn btn-s" onclick="closeM()">ביטול</button><button class="btn btn-p" onclick="saveNewUser()">הוסף משתמש</button>'},
+  };
+  const f=forms[type];if(!f)return;
+  document.getElementById('m-title').textContent=f.title;
+  document.getElementById('m-body').innerHTML=f.body;
+  document.getElementById('m-foot').innerHTML=f.foot;
+  document.getElementById('mbg').classList.add('on');
+}
+const closeM=()=>document.getElementById('mbg').classList.remove('on');
+
+async function saveTask(){
+  const n=document.getElementById('nt-n').value.trim();if(!n)return;
+  await db.post('tasks',{name:n,creator:document.getElementById('nt-c').value,owner:document.getElementById('nt-o').value,dept:document.getElementById('nt-d').value,prio:document.getElementById('nt-p').value,due_date:document.getElementById('nt-due').value||null,status:'ממתין לאישור',accepted:false,done:false,is_email:false,msgs_count:0});
+  closeM();addNotif('משימה חדשה: "'+n+'"');await loadAll();
+}
+async function savePTask(){
+  const t=document.getElementById('pt-t').value.trim();if(!t)return;
+  await db.post('tasks',{name:t,creator:currentUser.name,owner:currentUser.name,dept:currentUser.dept,prio:document.getElementById('pt-p').value,due_date:document.getElementById('pt-d').value||null,status:'חדש',accepted:true,done:false,is_email:false,msgs_count:0});
+  closeM();await loadAll();
+}
+async function saveEvent(){
+  const t=document.getElementById('ev-t').value.trim(),d=document.getElementById('ev-d').value;if(!t||!d)return;
+  await db.post('cal_events',{type:document.getElementById('ev-type').value,title:t,from_date:d,to_date:d,vis:['הכל']});
+  closeM();const ce=await db.get('cal_events','select=*');if(Array.isArray(ce)){calEvs=ce.filter(e=>e.type!=='ev-vac');calVacs=ce.filter(e=>e.type==='ev-vac');}renderCal();
+}
+function approveVacation(id){
+  const v=calVacs.find(x=>x.id===id);
+  if(v){
+    db.patch('cal_events',{title:v.title+' (אושר)'},'id=eq.'+id).then(async()=>{
+      addNotif('חופשה אושרה: '+v.emp);
+      const ce=await db.get('cal_events','select=*');
+      if(Array.isArray(ce)){calEvs=ce.filter(e=>e.type!=='ev-vac');calVacs=ce.filter(e=>e.type==='ev-vac');}
+      renderCal();if(selDay)selCalDay(selDay);
+    });
+  }
+}
+async function saveVacation(){
+  const f=document.getElementById('vac-f').value,t=document.getElementById('vac-t').value;if(!f||!t)return;
+  const emp=document.getElementById('vac-e').value;
+  const u=USERS.find(x=>x.name===emp);
+  await db.post('cal_events',{type:'ev-vac',title:'חופש: '+emp.split(' ')[0],from_date:f,to_date:t,vis:['הכל'],emp:emp,dept:u?u.dept:''});
+  closeM();addNotif('בקשת חופש נשלחה עבור '+emp);await loadAll();
+}
+// ─── STICKY NOTES ───
+let stickyNotes=[];
+let activeNoteColor='#fff9c4';
+let noteDragState=null;
+
+function setNoteColor(c){
+  activeNoteColor=c;
+  document.querySelectorAll('.note-color-btn').forEach(b=>{b.style.border=b.style.background===c||b.style.backgroundColor===c?'2.5px solid #333':'2px solid transparent';});
+}
+
+function loadStickyNotes(){
+  try{const s=localStorage.getItem('elkon-sticky-'+currentUser.id);if(s)stickyNotes=JSON.parse(s);}catch(e){stickyNotes=[];}
+}
+function saveStickyNotes(){
+  try{localStorage.setItem('elkon-sticky-'+currentUser.id,JSON.stringify(stickyNotes));}catch(e){}
+}
+
+function addStickyNote(){
+  const board=document.getElementById('notes-board');
+  if(!board)return;
+  const bw=board.offsetWidth||600,bh=board.offsetHeight||500;
+  const note={id:'n'+Date.now(),title:'',body:'',color:activeNoteColor,x:Math.max(10,Math.floor(Math.random()*(bw-220))),y:Math.max(10,Math.floor(Math.random()*(bh-200))),created:new Date().toLocaleDateString('he-IL')};
+  stickyNotes.push(note);saveStickyNotes();renderStickyNotes();
+  // focus title of new note
+  setTimeout(()=>{const el=document.getElementById('nt-'+note.id);if(el)el.focus();},50);
+}
+
+function deleteNote(id){
+  stickyNotes=stickyNotes.filter(n=>n.id!==id);saveStickyNotes();renderStickyNotes();
+}
+
+function updateNote(id,field,val){
+  const n=stickyNotes.find(x=>x.id===id);if(n){n[field]=val;saveStickyNotes();}
+}
+
+function renderStickyNotes(){
+  const board=document.getElementById('notes-board');if(!board)return;
+  board.innerHTML='';
+  stickyNotes.forEach(note=>{
+    const el=document.createElement('div');
+    el.className='sticky-note';
+    el.id='sticky-'+note.id;
+    el.style.cssText='left:'+note.x+'px;top:'+note.y+'px;background:'+note.color;
+    el.innerHTML=`
+      <div class="note-header" style="background:${note.color}" onmousedown="startNoteDrag(event,'${note.id}')">
+        <span style="font-size:10px;color:rgba(0,0,0,0.4);font-weight:500">⠿</span>
+        <div style="display:flex;gap:3px">
+          <button class="note-delete" onclick="deleteNote('${note.id}')" title="מחק פתק"><i class="ti ti-trash"></i></button>
+        </div>
+      </div>
+      <textarea class="note-title-input" id="nt-${note.id}" placeholder="כותרת..." rows="1" oninput="updateNote('${note.id}','title',this.value)">${note.title}</textarea>
+      <textarea class="note-body-input" id="nb-${note.id}" placeholder="כתוב כאן..." oninput="updateNote('${note.id}','body',this.value)">${note.body}</textarea>
+      <div class="note-date">${note.created}</div>`;
+    board.appendChild(el);
+  });
+}
+
+function startNoteDrag(e,id){
+  if(e.target.closest('.note-delete'))return;
+  e.preventDefault();
+  const el=document.getElementById('sticky-'+id);if(!el)return;
+  const board=document.getElementById('notes-board');
+  const br=board.getBoundingClientRect();
+  const startX=e.clientX,startY=e.clientY;
+  const note=stickyNotes.find(n=>n.id===id);if(!note)return;
+  const ox=note.x,oy=note.y;
+  el.classList.add('dragging-note');
+  // bring to front
+  el.style.zIndex=100;
+  function onMove(ev){
+    const dx=ev.clientX-startX,dy=ev.clientY-startY;
+    const newX=Math.max(0,Math.min(br.width-el.offsetWidth,ox+dx));
+    const newY=Math.max(0,Math.min(br.height-el.offsetHeight,oy+dy));
+    el.style.left=newX+'px';el.style.top=newY+'px';
+    note.x=newX;note.y=newY;
+  }
+  function onUp(){
+    el.classList.remove('dragging-note');el.style.zIndex=10;
+    saveStickyNotes();
+    document.removeEventListener('mousemove',onMove);
+    document.removeEventListener('mouseup',onUp);
+  }
+  document.addEventListener('mousemove',onMove);
+  document.addEventListener('mouseup',onUp);
+}
+
+// persNav already handles pnotes init above
+
+function saveNote(){
+  // legacy – not used anymore, kept for safety
+}
+function saveNewUser(){
+  const fn=document.getElementById('nu-fn').value.trim(),ln=document.getElementById('nu-ln').value.trim();
+  const usr=document.getElementById('nu-user').value.trim(),pass=document.getElementById('nu-pass').value;
+  const email=document.getElementById('nu-email').value.trim();
+  if(!fn||!usr||!pass){alert('נא למלא שם, שם כניסה וסיסמא');return;}
+  if(USERS.find(u=>u.username===usr)){alert('שם כניסה כבר קיים');return;}
+  const colors=['#0073ea','#e03355','#00c16e','#f0921e','#8b5cf6','#5c5fd6'];
+  const newU={id:'u'+Date.now(),name:fn+(ln?' '+ln:''),username:usr,email:email||usr+'@elcon.co.il',password:pass,role:document.getElementById('nu-role').value,dept:document.getElementById('nu-dept').value,color:colors[USERS.length%colors.length],initials:(fn[0]+(ln?ln[0]:'')).toUpperCase(),lastLogin:'לא נכנס עדיין',active:true};
+  USERS.push(newU);saveUsers();closeM();renderUsers();renderQuickUsers();addNotif('משתמש חדש נוסף: '+newU.name);
+}
+function topAdd(){if(activePage==='tasks')openM('task');else if(activePage==='calendar')openM('event');else if(activePage==='personal')openM('ptask');else if(activePage==='auto')openM('auto');else if(activePage==='users')openM('add-user');}
+
+// ═══ INIT ═══
+renderQuickUsers();
+const saved=sessionStorage.getItem('elkon-user');
+if(saved){try{
+  const su=JSON.parse(saved);
+  const fresh=loadUsers().find(x=>x.id===su.id&&x.active);
+  if(fresh){currentUser=fresh;startApp();}
+}catch(e){}}
+</script>
+</body>
+</html>
